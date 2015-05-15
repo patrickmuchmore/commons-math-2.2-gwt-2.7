@@ -1,6 +1,10 @@
 package org.feno.estimate.client;
 
+import jdistlib.Normal;
+import jdistlib.rng.MersenneTwister;
+
 import org.feno.estimate.shared.FieldVerifier;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,6 +42,13 @@ public class Estimate implements EntryPoint {
    * This is the entry point method.
    */
   public void onModuleLoad() {
+    int nDoubles = 10;
+    double[] someDoubles = new double[nDoubles];
+    MersenneTwister mt = new MersenneTwister(314);
+    for(int i=1; i<nDoubles; i++) {
+      someDoubles[i] = Normal.random(1, 4, mt);
+      RootPanel.get().add(new HTML("<div>"+String.valueOf(someDoubles[i])+"</div>"));
+    }
     final Button sendButton = new Button("Send");
     final TextBox nameField = new TextBox();
     nameField.setText("GWT User");

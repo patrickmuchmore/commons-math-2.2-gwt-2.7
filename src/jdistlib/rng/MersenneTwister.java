@@ -238,8 +238,14 @@ public strictfp class MersenneTwister extends RandomEngine implements Serializab
 	public MersenneTwister clone()
 	{
 		MersenneTwister f = new MersenneTwister();
-		f.mt = mt.clone();
-		f.mag01 = mag01.clone();
+		// GWT doesn't support cloning arrays, so make a copy instead.
+		//f.mt = mt.clone();
+		//f.mag01 = mag01.clone();
+		f.mt = new int[this.mt.length];
+		System.arraycopy(this.mt, 0, f.mt, 0, this.mt.length);
+		f.mag01 = new int[this.mag01.length];
+		System.arraycopy(this.mag01, 0, f.mag01, 0, this.mag01.length);
+		
 		f.mti = mti;
 		f.mSeed = mSeed;
 		f.__nextNextGaussian = __nextNextGaussian;
@@ -261,33 +267,34 @@ public strictfp class MersenneTwister extends RandomEngine implements Serializab
 		return true;
 	}
 
-	/** Reads the entire state of the MersenneTwister RNG from the stream */
-	public void readState(DataInputStream stream) throws IOException
-	{
-		int len = mt.length;
-		for(int x=0;x<len;x++) mt[x] = stream.readInt();
-
-		len = mag01.length;
-		for(int x=0;x<len;x++) mag01[x] = stream.readInt();
-
-		mti = stream.readInt();
-		__nextNextGaussian = stream.readDouble();
-		__haveNextNextGaussian = stream.readBoolean();
-	}
-
-	/** Writes the entire state of the MersenneTwister RNG to the stream */
-	public void writeState(DataOutputStream stream) throws IOException
-	{
-		int len = mt.length;
-		for(int x=0;x<len;x++) stream.writeInt(mt[x]);
-
-		len = mag01.length;
-		for(int x=0;x<len;x++) stream.writeInt(mag01[x]);
-
-		stream.writeInt(mti);
-		stream.writeDouble(__nextNextGaussian);
-		stream.writeBoolean(__haveNextNextGaussian);
-	}
+	  //TODO How to implement in JavaScript, if at all. 
+//	/** Reads the entire state of the MersenneTwister RNG from the stream */
+//	public void readState(DataInputStream stream) throws IOException
+//	{
+//		int len = mt.length;
+//		for(int x=0;x<len;x++) mt[x] = stream.readInt();
+//
+//		len = mag01.length;
+//		for(int x=0;x<len;x++) mag01[x] = stream.readInt();
+//
+//		mti = stream.readInt();
+//		__nextNextGaussian = stream.readDouble();
+//		__haveNextNextGaussian = stream.readBoolean();
+//	}
+//
+//	/** Writes the entire state of the MersenneTwister RNG to the stream */
+//	public void writeState(DataOutputStream stream) throws IOException
+//	{
+//		int len = mt.length;
+//		for(int x=0;x<len;x++) stream.writeInt(mt[x]);
+//
+//		len = mag01.length;
+//		for(int x=0;x<len;x++) stream.writeInt(mag01[x]);
+//
+//		stream.writeInt(mti);
+//		stream.writeDouble(__nextNextGaussian);
+//		stream.writeBoolean(__haveNextNextGaussian);
+//	}
 
 	/**
 	 * Constructor using the default seed.
@@ -1107,7 +1114,9 @@ public strictfp class MersenneTwister extends RandomEngine implements Serializab
 			- 1;
 			s = v1 * v1 + v2 * v2;
 		} while (s >= 1 || s==0);
-		double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s)/s);
+		// GWT doesn't support StrictMath, so use Math instead.
+		//double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s)/s);
+		double multiplier = Math.sqrt(-2 * Math.log(s)/s);
 		__nextNextGaussian = v2 * multiplier;
 		__haveNextNextGaussian = true;
 		return v1 * multiplier;

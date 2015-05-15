@@ -23,8 +23,11 @@ package jdistlib.math.spline;
  *
  */
 public class SmoothSplineResult {
-	static final String sLn = System.getProperty("line.separator"); //$NON-NLS-1$
-	public double[]
+	// System.getProperty not supported by GWT.
+  //static final String sLn = System.getProperty("line.separator"); //$NON-NLS-1$
+  // TODO see how this works cross platform. 
+  static final String sLn = "\n";
+  public double[]
 		mKnots,
 		mCoefficients,
 		mLeverage,
