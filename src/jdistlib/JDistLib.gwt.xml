@@ -10,7 +10,7 @@
   <inherits name='com.google.gwt.user.User'/>
 
   <!-- Other module inherits                                      -->
-  <inherits name="ca.uol.ait.fftpack.FFTPack"/>
+  <inherits name="ca.uol.aig.fftpack.FFTPack"/>
   
   <source path=''/>
 

@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-charts-0.9.10.jar" sourcepath="lib/gwt-charts-0.9.10.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
