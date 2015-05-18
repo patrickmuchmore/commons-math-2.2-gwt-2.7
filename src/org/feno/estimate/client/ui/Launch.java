@@ -157,7 +157,7 @@ public class Launch implements EntryPoint {
     MersenneTwister rng = new MersenneTwister(31415);
     rng.setSeed(31415);
     
-    int nDoubles = 1000000;
+    int nDoubles = 1000;
     
     DataTable randomSample = DataTable.create();
     int valueCol = randomSample.addColumn(ColumnType.NUMBER, "Sample values");
