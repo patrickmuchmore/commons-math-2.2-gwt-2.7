@@ -45,9 +45,10 @@
       </classpath>
       <arg line="-war"/>
       <arg value="war"/>
-      <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+      <!-- Additional arguments like -style PRETTY or -logLevel DEBUG 
       <arg line="-style"/>
-      <arg value="PRETTY"/>
+      <arg value="PRETTY"/> -->
+      <arg line="-XenableClosureCompiler"/>
       <arg line="${gwt.args}"/>
       <arg value="org.feno.estimate.Launch"/>
     </java>
@@ -135,6 +136,12 @@
 
   <target name="war" depends="build" description="Create a war file">
     <zip destfile="Estimate.war" basedir="war"/>
+  </target>
+
+  <target name="deploy.soto" depends="war" description="Update tomcat server running on Soto server">
+    <scp file="Estimate.war" 
+         todir="muchmore@ssb202-4.hsc.usc.edu://home/muchmore/tomcat/apache-tomcat-7.0.55/war" 
+      	 keyfile="${user.home}/.ssh/id_rsa"/>
   </target>
 
   <target name="clean" description="Cleans this project">

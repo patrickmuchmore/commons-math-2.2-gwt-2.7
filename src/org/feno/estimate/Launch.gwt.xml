@@ -22,6 +22,7 @@
   <!-- Other module inherits                                      -->
   <inherits name="jdistlib.JDistLib"/>
   <inherits name="com.googlecode.gwt.charts.Charts"/>
+  <inherits name="org.apache.commons.math.Math"/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.feno.estimate.client.ui.Launch'/>

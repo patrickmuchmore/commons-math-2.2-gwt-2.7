@@ -1,60 +1,125 @@
 package org.feno.estimate.client.model;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+
+import org.feno.estimate.client.mcmc.PosteriorSample;
+
+import jdistlib.Normal;
+import jdistlib.rng.RandomEngine;
+
+import com.google.gwt.typedarrays.client.Float64ArrayNative;
 
 public abstract class Model {
   
-  private final HashSet<String> parameterNames;
-  private HashMap<String, Double> nameValueMap = new HashMap<String, Double>();
+  private final HashMap<String, Parameter> parameters = new HashMap<String, Parameter>();
 
-  protected Model(Set<String> names) {
-    parameterNames = new HashSet<String>(names);
-    Iterator<String> namesIter = names.iterator();
-    while(namesIter.hasNext()) {
-      nameValueMap.put(namesIter.next(), Double.NaN);
+  public Model(Iterable<Parameter> params) {
+    for(Parameter param : params) {
+      parameters.put(param.getName(), param);
+    }
+    if(parameters.size() == 0) {
+      throw new IllegalArgumentException("A Model must have at least one Parameter.");
     }
   }
   
-  protected Model(String... names) {
-    this(new HashSet<String>(Arrays.asList(names)));
-  }
-
-  private void checkName(String name) {
-    if(!parameterNames.contains(name)) {
-      throw new IllegalArgumentException("Unkown parameter key " + name);
-    }
-  }
-   
-  public void setParameterValue(String name, Double value) {
-    checkName(name);
-    nameValueMap.put(name, value);
+  public Model(Parameter... params) {
+    this(Arrays.asList(params));
   }
   
-  public Double getParameterValue(String name) {
-    checkName(name);
-    return nameValueMap.get(name); 
+  public Parameter getParameter(String name) {
+    return parameters.get(name);
   }
   
-  public void setParameterValues(String[] names, Double[] values) {
-    if(names.length != values.length) {
-      throw new IllegalArgumentException("Array of names and array of values have different lengths.");
-    }
-    for(int i=0; i<names.length; i++) {
-      checkName(names[i]);
-      setParameterValue(names[i], values[i]);
-    }
+  public Collection<Parameter> getParameters() {
+    return parameters.values();
   }
   
-  public HashMap<String, Double> getNameValueMap() {
-    return nameValueMap;
+  public double getParameterValue(String name) {
+    return parameters.get(name).getValue();
+  }
+  
+  public void setParameterValue(String name, double value) {
+    parameters.get(name).setValue(value);
   }
 
   public abstract double fenoEstimate(double vdot);
   
   public abstract double logLikelihood();
+  
+  public HashMap<String, PosteriorSample> samplePosteriorToo(int steps, RandomEngine rng) {
+    
+    HashMap<String, PosteriorSample> parameterSamples = new HashMap<String, PosteriorSample>(parameters.size());
+   
+    for(Parameter param : parameters.values()) {
+      parameterSamples.put(param.getName(), new PosteriorSample(steps));
+    }
+    
+    HashMap<String, Double> currentParameterValues = new HashMap<String, Double>(parameters.size());
+    double currentLogLikelihood = logLikelihood();
+    double proposedLogLikelihood = Double.NEGATIVE_INFINITY;
+    
+    for(int i=0; i<steps; i++) {
+      
+      for(Parameter param : parameters.values()) {
+        currentParameterValues.put(param.getName(), param.getValue());
+        param.setValue(param.reflectProposal(Normal.random(param.getValue(), param.getPropSd(), rng)));
+      }
+      
+      proposedLogLikelihood = logLikelihood();
+      
+      if(Math.log(rng.nextDouble()) < proposedLogLikelihood - currentLogLikelihood) {
+        currentLogLikelihood = proposedLogLikelihood;
+      } else {
+        for(Parameter param : parameters.values()) {
+          param.setValue(currentParameterValues.get(param.getName()));
+        }
+      }
+      
+      for(Parameter param : parameters.values()) {
+        parameterSamples.get(param.getName()).setSampleValue(i, param.getValue());
+      }
+    }
+    
+    return parameterSamples;
+  }
+ 
+  public HashMap<String, Float64ArrayNative> samplePosterior(int steps, RandomEngine rng) {
+    
+      HashMap<String, Float64ArrayNative> parameterSamples = new HashMap<String, Float64ArrayNative>(parameters.size());
+     
+      for(Parameter param : parameters.values()) {
+        parameterSamples.put(param.getName(), Float64ArrayNative.create(steps));
+      }
+      
+      HashMap<String, Double> currentParameterValues = new HashMap<String, Double>(parameters.size());
+      double currentLogLikelihood = logLikelihood();
+      double proposedLogLikelihood = Double.NEGATIVE_INFINITY;
+      
+      for(int i=0; i<steps; i++) {
+        
+        for(Parameter param : parameters.values()) {
+          currentParameterValues.put(param.getName(), param.getValue());
+          param.setValue(param.reflectProposal(Normal.random(param.getValue(), param.getPropSd(), rng)));
+        }
+        
+        proposedLogLikelihood = logLikelihood();
+        
+        if(Math.log(rng.nextDouble()) < proposedLogLikelihood - currentLogLikelihood) {
+          currentLogLikelihood = proposedLogLikelihood;
+        } else {
+          for(Parameter param : parameters.values()) {
+            param.setValue(currentParameterValues.get(param.getName()));
+          }
+        }
+        
+        for(Parameter param : parameters.values()) {
+          parameterSamples.get(param.getName()).set(i, param.getValue());
+        }
+      }
+      
+      return parameterSamples;
+    }
   
 }
