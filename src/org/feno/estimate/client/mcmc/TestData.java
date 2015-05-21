@@ -1,8 +1,19 @@
 package org.feno.estimate.client.mcmc;
 
 public final class TestData {
-
-  public static final double[][] data = new double[][] {
+ 
+  public static final double[][] simulated = new double[][] {
+    { 30, 25.405401 },
+    { 30, 24.054324 }, 
+    { 50, 18.327235 }, 
+    { 50, 16.703383 }, 
+    { 100, 9.318527 }, 
+    { 100, 9.779617 }, 
+    { 300, 4.985977 },
+    { 300, 4.710724 },
+  };
+  
+  public static final double[][] condorelli = new double[][] {
       { 101.6917293, 8.362320274 }, 
       { 107.8947368, 6.905454426 },
       { 110.4323308, 6.94024535 }, 
