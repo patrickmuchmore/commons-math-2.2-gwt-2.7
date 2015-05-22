@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.typedarrays.client.Float64ArrayNative;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.*;
@@ -55,10 +56,63 @@ public class Launch implements EntryPoint {
   private HashMap<String, Histogram> currentHistograms = new HashMap<String, Histogram>();
   private HashMap<String, HistogramOptions> currentHistogramOptions = new HashMap<String, HistogramOptions>();
 
+//  private static final String[] MONTH_NAMES = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct",
+//    "nov", "dec" };
+//  /** Create the first plot */
+//  private org.feno.estimate.client.plot.Histogram createPlot()
+//  {
+//      PlotModel model = new PlotModel();
+//      PlotOptions plotOptions = PlotOptions.create();
+//
+//      plotOptions.setGlobalSeriesOptions( GlobalSeriesOptions.create().setBarsSeriesOptions( BarSeriesOptions.create()
+//          .setShow( true )
+//          .setLineWidth( 1 )
+//          .setBarWidth( 1 )
+//          .setAlignment( BarAlignment.CENTER ) ) );
+//
+//      plotOptions.setLegendOptions( LegendOptions.create().setShow( false ) );
+//
+//      // add tick formatter to the options
+//      plotOptions.addXAxisOptions( AxisOptions.create().setAxisLabelAngle(135d).setTicks( 12 ).setTickFormatter( new TickFormatter()
+//      {
+//          @Override
+//          public String formatTickValue( double tickValue, Axis axis )
+//          {
+//              if ( tickValue > 0 && tickValue <= 12 )
+//              {
+//                  return MONTH_NAMES[(int) (tickValue - 1)];
+//              }
+//              return "";
+//          }
+//      } ) );
+//
+//      // create a series
+//      SeriesHandler handler = model.addSeries( Series.of( "Ottawa's Month Temperatures (Daily Average in °C)" ).setColor( "blue" ) );
+//
+//      // add data
+//      handler.add( DataPoint.of( 1, -10.5 ) );
+//      handler.add( DataPoint.of( 2, -8.6 ) );
+//      handler.add( DataPoint.of( 3, -2.4 ) );
+//      handler.add( DataPoint.of( 4, 6 ) );
+//      handler.add( DataPoint.of( 5, 13.6 ) );
+//      handler.add( DataPoint.of( 6, 18.4 ) );
+//      handler.add( DataPoint.of( 7, 21 ) );
+//      handler.add( DataPoint.of( 8, 19.7 ) );
+//      handler.add( DataPoint.of( 9, 14.7 ) );
+//      handler.add( DataPoint.of( 10, 8.2 ) );
+//      handler.add( DataPoint.of( 11, 1.5 ) );
+//      handler.add( DataPoint.of( 12, -6.6 ) );
+//
+//      // create the plot
+//      return new org.feno.estimate.client.plot.Histogram( model, plotOptions );
+//  }
+
   /**
    * This is the entry point method.
    */
   public void onModuleLoad() {
+    
+    
 
     popup.add(popupLabel);
     popup.setGlassEnabled(true); // Enable the glass panel
@@ -119,32 +173,38 @@ public class Launch implements EntryPoint {
     leftPanel.setWidgetTopHeight(optionsGrid, 4, Unit.EM, 100, Unit.PCT);
 
     getAppPanel().addWest(leftPanel, 20);
+//    org.feno.estimate.client.plot.Histogram hist = createPlot();
+//    plotPanel.add(hist);
+//
+//    plotPanel.setWidgetTopHeight(hist, 0, Unit.PCT, 100, Unit.PCT);
+//    plotPanel.setWidgetLeftWidth(hist, 0, Unit.PCT, 100, Unit.PCT);
     getAppPanel().add(plotPanel);
-    RootLayoutPanel.get().add(getAppPanel());   
-
+    RootLayoutPanel.get().add(getAppPanel());       
     runDemo.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
-        Util.showWaitCursor();
-        popupLabel.setHTML("<h2>Generating MCMC samples...</h2>");
-        popup.center(); // Center the popup and make it visible
-        for(Histogram hist : currentHistograms.values()) {
-          hist.removeFromParent();
-        }
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
-          @Override
-          public void execute() {
-            demoCalculate();
-//            Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
-//              @Override
-//              public void execute() {
-//                popupLabel.setHTML("<h2>Plotting MCMC samples...</h2>");
-//                plotPanel.clear();
-//                demoPlot();
-//              }
-//            });  
-          }
-        });
+
+//        plotPanel.onResize();
+//        Util.showWaitCursor();
+//        popupLabel.setHTML("<h2>Generating MCMC samples...</h2>");
+//        popup.center(); // Center the popup and make it visible
+//        for(Histogram hist : currentHistograms.values()) {
+//          hist.removeFromParent();
+//        }
+//        Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
+//          @Override
+//          public void execute() {
+//            demoCalculate();
+////            Scheduler.get().scheduleDeferred(new ScheduledCommand() {    
+////              @Override
+////              public void execute() {
+////                popupLabel.setHTML("<h2>Plotting MCMC samples...</h2>");
+////                plotPanel.clear();
+////                demoPlot();
+////              }
+////            });  
+//          }
+//        });
       }
     });
   }

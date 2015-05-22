@@ -4,7 +4,11 @@
 	<classpathentry kind="src" path="gwt_intrinsic"/>
 	<classpathentry kind="src" path="gwt_emul"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-user.jar"/>
+	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.gwtproject.org/javadoc/latest/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA-sources.jar"/>

@@ -23,6 +23,10 @@ public class PosteriorSample {
     return sampleStats;
   }
   
+  public Float64ArrayNative getSampleValues() {
+    return sampleValues;
+  }
+  
   public void setSampleValue(int index, double value) {
     sampleValues.set(index, value);
     sampleStats.addValue(value);
