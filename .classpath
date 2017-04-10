@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="gwt_intrinsic"/>
 	<classpathentry kind="src" path="gwt_emul"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-user.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://www.gwtproject.org/javadoc/latest/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/gwt-dev.jar"/>
-	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA.jar"/>
-	<classpathentry kind="lib" path="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-charts-0.9.10.jar" sourcepath="lib/gwt-charts-0.9.10.jar"/>
 	<classpathentry kind="lib" path="lib/junit4_11_0.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-dev.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-user.jar"/>
+	<classpathentry kind="lib" path="lib/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

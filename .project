@@ -14,16 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>gwt_emul</name>
-			<type>2</type>
-			<location>/home/muchmore/class/feno/git/gwt/user/super/com/google/gwt/emul</location>
-		</link>
-		<link>
-			<name>gwt_intrinsic</name>
-			<type>2</type>
-			<location>/home/muchmore/class/feno/git/gwt/dev/core/super/com/google/gwt/dev/jjs/intrinsic</location>
-		</link>
-	</linkedResources>
 </projectDescription>
