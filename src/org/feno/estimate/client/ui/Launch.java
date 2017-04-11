@@ -3,7 +3,8 @@ package org.feno.estimate.client.ui;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.commons.math.random.JDKRandomGenerator;
+import org.apache.commons.math.random.MersenneTwister;
+import org.apache.commons.math.random.RandomGenerator;
 import org.feno.estimate.client.Util;
 import org.feno.estimate.client.model.Parameter;
 import org.feno.estimate.client.model.Prior.Uniform;
@@ -57,8 +58,8 @@ public class Launch implements EntryPoint {
 	private final HTML popupLabel = new HTML();
 	private final SimplePanel coverup = new SimplePanel();
 	private ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
-	// private final MersenneTwister mtRng = new MersenneTwister();
-	private final JDKRandomGenerator mtRng = new JDKRandomGenerator();
+	private final RandomGenerator mtRng = new MersenneTwister();
+	// private final RandomGenerator mtRng = new JDKRandomGenerator();
 	private HashMap<String, Histogram> currentHistograms = new HashMap<String, Histogram>();
 	private HashMap<String, HistogramOptions> currentHistogramOptions = new HashMap<String, HistogramOptions>();
 
