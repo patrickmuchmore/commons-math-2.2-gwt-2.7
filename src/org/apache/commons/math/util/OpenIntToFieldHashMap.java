@@ -17,7 +17,7 @@
 package org.apache.commons.math.util;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
+//import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ConcurrentModificationException;
@@ -595,18 +595,18 @@ public class OpenIntToFieldHashMap<T extends FieldElement<T>> implements Seriali
 
     }
 
-    /**
-     * Read a serialized object.
-     * @param stream input stream
-     * @throws IOException if object cannot be read
-     * @throws ClassNotFoundException if the class corresponding
-     * to the serialized object cannot be found
-     */
-    private void readObject(final ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        count = 0;
-    }
+//    /**
+//     * Read a serialized object.
+//     * @param stream input stream
+//     * @throws IOException if object cannot be read
+//     * @throws ClassNotFoundException if the class corresponding
+//     * to the serialized object cannot be found
+//     */
+//    private void readObject(final ObjectInputStream stream)
+//        throws IOException, ClassNotFoundException {
+//        stream.defaultReadObject();
+//        count = 0;
+//    }
 
     /** Build an array of elements.
      * @param length size of the array to build
