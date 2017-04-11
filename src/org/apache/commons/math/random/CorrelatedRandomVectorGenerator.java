@@ -17,13 +17,14 @@
 
 package org.apache.commons.math.random;
 
-import org.apache.commons.math.ArrayUtil;
 import org.apache.commons.math.DimensionMismatchException;
+import org.apache.commons.math.linear.MatrixUtils;
+import org.apache.commons.math.linear.NotPositiveDefiniteMatrixException;
 import org.apache.commons.math.linear.RealMatrix;
-import org.apache.commons.math.linear.RealMatrixImpl;
+import org.apache.commons.math.util.FastMath;
 
-/** 
- * A {@link RandomVectorGenerator} that generates vectors with with 
+/**
+ * A {@link RandomVectorGenerator} that generates vectors with with
  * correlated components.
  * <p>Random vectors with correlated components are built by combining
  * the uncorrelated components of another random vector in such a way that
@@ -35,7 +36,7 @@ import org.apache.commons.math.linear.RealMatrixImpl;
  * interesting case is when the generated vector should be drawn from a <a
  * href="http://en.wikipedia.org/wiki/Multivariate_normal_distribution">
  * Multivariate Normal Distribution</a>. The approach using a Cholesky
- * decomposition is quite usual in this case. However, it cas be extended
+ * decomposition is quite usual in this case. However, it can be extended
  * to other cases as long as the underlying random generator provides
  * {@link NormalizedRandomGenerator normalized values} like {@link
  * GaussianRandomGenerator} or {@link UniformRandomGenerator}.</p>
@@ -47,7 +48,7 @@ import org.apache.commons.math.linear.RealMatrixImpl;
  * should be null. Another non-conventional extension handling this case
  * is used here. Rather than computing <code>C = U<sup>T</sup>.U</code>
  * where <code>C</code> is the covariance matrix and <code>U</code>
- * is an uppertriangular matrix, we compute <code>C = B.B<sup>T</sup></code>
+ * is an upper-triangular matrix, we compute <code>C = B.B<sup>T</sup></code>
  * where <code>B</code> is a rectangular matrix having
  * more rows than columns. The number of columns of <code>B</code> is
  * the rank of the covariance matrix, and it is the dimension of the
@@ -55,12 +56,27 @@ import org.apache.commons.math.linear.RealMatrixImpl;
  * of the correlated vector. This class handles this situation
  * automatically.</p>
  *
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1043908 $ $Date: 2010-12-09 12:53:14 +0100 (jeu. 09 déc. 2010) $
  * @since 1.2
  */
 
 public class CorrelatedRandomVectorGenerator
-implements RandomVectorGenerator {
+    implements RandomVectorGenerator {
+
+    /** Mean vector. */
+    private final double[] mean;
+
+    /** Underlying generator. */
+    private final NormalizedRandomGenerator generator;
+
+    /** Storage for the normalized vector. */
+    private final double[] normalized;
+
+    /** Permutated Cholesky root of the covariance matrix. */
+    private RealMatrix root;
+
+    /** Rank of the covariance matrix. */
+    private int rank;
 
     /** Simple constructor.
      * <p>Build a correlated random vector generator from its mean
@@ -87,8 +103,8 @@ implements RandomVectorGenerator {
         if (mean.length != order) {
             throw new DimensionMismatchException(mean.length, order);
         }
-        //this.mean = (double[]) mean.clone();
-        this.mean = ArrayUtil.cloneDouble(mean);
+        this.mean = mean.clone();
+
         decompose(covariance, small);
 
         this.generator = generator;
@@ -228,7 +244,7 @@ implements RandomVectorGenerator {
             } else {
 
                 // transform the matrix
-                double sqrt = Math.sqrt(c[ir][ir]);
+                double sqrt = FastMath.sqrt(c[ir][ir]);
                 b[rank][rank] = sqrt;
                 double inverse = 1 / sqrt;
                 for (int i = rank + 1; i < order; ++i) {
@@ -252,9 +268,11 @@ implements RandomVectorGenerator {
         }
 
         // build the root matrix
-        root = new RealMatrixImpl(order, rank);
+        root = MatrixUtils.createRealMatrix(order, rank);
         for (int i = 0; i < order; ++i) {
-            System.arraycopy(b[i], 0, root.getDataRef()[swap[i]], 0, rank);
+            for (int j = 0; j < rank; ++j) {
+                root.setEntry(index[i], j, b[i][j]);
+            }
         }
 
     }
@@ -282,20 +300,5 @@ implements RandomVectorGenerator {
         return correlated;
 
     }
-
-    /** Mean vector. */
-    private double[] mean;
-
-    /** Permutated Cholesky root of the covariance matrix. */
-    private RealMatrixImpl root;
-
-    /** Rank of the covariance matrix. */
-    private int rank;
-
-    /** Underlying generator. */
-    private NormalizedRandomGenerator generator;
-
-    /** Storage for the normalized vector. */
-    private double[] normalized;
 
 }

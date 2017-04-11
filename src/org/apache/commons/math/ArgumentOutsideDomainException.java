@@ -17,11 +17,13 @@
 
 package org.apache.commons.math;
 
+import org.apache.commons.math.exception.util.LocalizedFormats;
+
 /**
  * Error thrown when a method is called with an out of bounds argument.
  *
  * @since 1.2
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1070725 $ $Date: 2011-02-15 02:31:12 +0100 (mar. 15 févr. 2011) $
  */
 public class ArgumentOutsideDomainException extends FunctionEvaluationException {
 
@@ -31,14 +33,12 @@ public class ArgumentOutsideDomainException extends FunctionEvaluationException 
     /**
      * Constructs an exception with specified formatted detail message.
      * Message formatting is delegated to {@link java.text.MessageFormat}.
-     * @param argument  the failing function argument 
+     * @param argument  the failing function argument
      * @param lower lower bound of the domain
      * @param upper upper bound of the domain
      */
     public ArgumentOutsideDomainException(double argument, double lower, double upper) {
-        super(argument,
-              "Argument {0} outside domain [{1} ; {2}]",
-              new Object[] { new Double(argument), new Double(lower), new Double(upper) });
+        super(argument, LocalizedFormats.ARGUMENT_OUTSIDE_DOMAIN, argument, lower, upper);
     }
 
 }

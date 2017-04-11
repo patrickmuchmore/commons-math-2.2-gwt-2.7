@@ -18,30 +18,31 @@
 package org.apache.commons.math;
 
 import org.apache.commons.math.ConvergenceException;
+import org.apache.commons.math.exception.util.DummyLocalizable;
+import org.apache.commons.math.exception.util.Localizable;
+import org.apache.commons.math.exception.util.LocalizedFormats;
 
 /**
  * Error thrown when a numerical computation exceeds its allowed
  * number of iterations.
  *
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1070725 $ $Date: 2011-02-15 02:31:12 +0100 (mar. 15 févr. 2011) $
  * @since 1.2
  */
 public class MaxIterationsExceededException extends ConvergenceException {
 
     /** Serializable version identifier. */
-    private static final long serialVersionUID = -2154780004193976271L;
+    private static final long serialVersionUID = -7821226672760574694L;
 
     /** Maximal number of iterations allowed. */
-    private int maxIterations;
+    private final int maxIterations;
 
     /**
-     * Constructs an exception with specified formatted detail message.
-     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * Constructs an exception with a default detail message.
      * @param maxIterations maximal number of iterations allowed
      */
-    public MaxIterationsExceededException(int maxIterations) {
-        super("Maximal number of iterations ({0}) exceeded",
-              new Object[] { new Integer(maxIterations) });
+    public MaxIterationsExceededException(final int maxIterations) {
+        super(LocalizedFormats.MAX_ITERATIONS_EXCEEDED, maxIterations);
         this.maxIterations = maxIterations;
     }
 
@@ -51,9 +52,24 @@ public class MaxIterationsExceededException extends ConvergenceException {
      * @param maxIterations the exceeded maximal number of iterations
      * @param pattern format specifier
      * @param arguments format arguments
+     * @deprecated as of 2.2 replaced by {@link #MaxIterationsExceededException(int, Localizable, Object...)}
      */
-    public MaxIterationsExceededException(int maxIterations,
-                                          String pattern, Object[] arguments) {
+    @Deprecated
+    public MaxIterationsExceededException(final int maxIterations,
+                                          final String pattern, final Object ... arguments) {
+        this(maxIterations, new DummyLocalizable(pattern), arguments);
+    }
+
+    /**
+     * Constructs an exception with specified formatted detail message.
+     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param maxIterations the exceeded maximal number of iterations
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
+     */
+    public MaxIterationsExceededException(final int maxIterations,
+                                           final Localizable pattern, final Object ... arguments) {
         super(pattern, arguments);
         this.maxIterations = maxIterations;
     }

@@ -24,27 +24,27 @@ import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStati
  * Returns the minimum of the available values.
  * <p>
  * <ul>
- * <li>The result is <code>NaN</code> iff all values are <code>NaN</code> 
+ * <li>The result is <code>NaN</code> iff all values are <code>NaN</code>
  * (i.e. <code>NaN</code> values have no impact on the value of the statistic).</li>
- * <li>If any of the values equals <code>Double.NEGATIVE_INFINITY</code>, 
+ * <li>If any of the values equals <code>Double.NEGATIVE_INFINITY</code>,
  * the result is <code>Double.NEGATIVE_INFINITY.</code></li>
  * </ul></p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 1006299 $ $Date: 2010-10-10 16:47:17 +0200 (dim. 10 oct. 2010) $
  */
 public class Min extends AbstractStorelessUnivariateStatistic implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = -2941995784909003131L;  
-      
+    private static final long serialVersionUID = -2941995784909003131L;
+
     /**Number of values that have been added */
     private long n;
-    
+
     /**Current value of the statistic */
     private double value;
 
@@ -55,10 +55,21 @@ public class Min extends AbstractStorelessUnivariateStatistic implements Seriali
         n = 0;
         value = Double.NaN;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code Min} identical
+     * to the {@code original}
+     *
+     * @param original the {@code Min} instance to copy
      */
+    public Min(Min original) {
+        copy(original, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
         if (d < value || Double.isNaN(value)) {
             value = d;
@@ -67,27 +78,29 @@ public class Min extends AbstractStorelessUnivariateStatistic implements Seriali
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         value = Double.NaN;
         n = 0;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return value;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getN()
+     * {@inheritDoc}
      */
     public long getN() {
         return n;
     }
-    
+
     /**
      * Returns the minimum of the entries in the specified portion of
      * the input array, or <code>Double.NaN</code> if the designated subarray
@@ -97,12 +110,12 @@ public class Min extends AbstractStorelessUnivariateStatistic implements Seriali
      * the array index parameters are not valid.</p>
      * <p>
      * <ul>
-     * <li>The result is <code>NaN</code> iff all values are <code>NaN</code> 
+     * <li>The result is <code>NaN</code> iff all values are <code>NaN</code>
      * (i.e. <code>NaN</code> values have no impact on the value of the statistic).</li>
-     * <li>If any of the values equals <code>Double.NEGATIVE_INFINITY</code>, 
+     * <li>If any of the values equals <code>Double.NEGATIVE_INFINITY</code>,
      * the result is <code>Double.NEGATIVE_INFINITY.</code></li>
      * </ul> </p>
-     * 
+     *
      * @param values the input array
      * @param begin index of the first array element to include
      * @param length the number of elements to include
@@ -110,6 +123,7 @@ public class Min extends AbstractStorelessUnivariateStatistic implements Seriali
      * @throws IllegalArgumentException if the array is null or the array index
      *  parameters are not valid
      */
+    @Override
     public double evaluate(final double[] values,final int begin, final int length) {
         double min = Double.NaN;
         if (test(values, begin, length)) {
@@ -121,5 +135,29 @@ public class Min extends AbstractStorelessUnivariateStatistic implements Seriali
             }
         }
         return min;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Min copy() {
+        Min result = new Min();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source Min to copy
+     * @param dest Min to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(Min source, Min dest) {
+        dest.setData(source.getDataRef());
+        dest.n = source.n;
+        dest.value = source.value;
     }
 }

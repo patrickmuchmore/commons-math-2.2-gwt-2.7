@@ -16,11 +16,10 @@
  */
 package org.apache.commons.math.util;
 
-import java.io.Serializable;
-
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.MaxIterationsExceededException;
+import org.apache.commons.math.exception.util.LocalizedFormats;
 
 /**
  * Provides a generic means to evaluate continued fractions.  Subclasses simply
@@ -34,13 +33,10 @@ import org.apache.commons.math.MaxIterationsExceededException;
  * </ul>
  * </p>
  *
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ * @version $Revision: 990655 $ $Date: 2010-08-29 23:49:40 +0200 (dim. 29 août 2010) $
  */
-public abstract class ContinuedFraction implements Serializable {
-    
-    /** Serialization UID */
-    private static final long serialVersionUID = 1768555336266158242L;
-    
+public abstract class ContinuedFraction {
+
     /** Maximum allowed numerical error. */
     private static final double DEFAULT_EPSILON = 10e-9;
 
@@ -72,7 +68,7 @@ public abstract class ContinuedFraction implements Serializable {
     /**
      * Evaluates the continued fraction at the value x.
      * @param x the evaluation point.
-     * @return the value of the continued fraction evaluated at x. 
+     * @return the value of the continued fraction evaluated at x.
      * @throws MathException if the algorithm fails to converge.
      */
     public double evaluate(double x) throws MathException {
@@ -83,7 +79,7 @@ public abstract class ContinuedFraction implements Serializable {
      * Evaluates the continued fraction at the value x.
      * @param x the evaluation point.
      * @param epsilon maximum error allowed.
-     * @return the value of the continued fraction evaluated at x. 
+     * @return the value of the continued fraction evaluated at x.
      * @throws MathException if the algorithm fails to converge.
      */
     public double evaluate(double x, double epsilon) throws MathException {
@@ -94,7 +90,7 @@ public abstract class ContinuedFraction implements Serializable {
      * Evaluates the continued fraction at the value x.
      * @param x the evaluation point.
      * @param maxIterations maximum number of convergents
-     * @return the value of the continued fraction evaluated at x. 
+     * @return the value of the continued fraction evaluated at x.
      * @throws MathException if the algorithm fails to converge.
      */
     public double evaluate(double x, int maxIterations) throws MathException {
@@ -105,7 +101,7 @@ public abstract class ContinuedFraction implements Serializable {
      * <p>
      * Evaluates the continued fraction at the value x.
      * </p>
-     * 
+     *
      * <p>
      * The implementation of this method is based on equations 14-17 of:
      * <ul>
@@ -120,11 +116,11 @@ public abstract class ContinuedFraction implements Serializable {
      * very large intermediate results which can result in numerical overflow.
      * As a means to combat these overflow conditions, the intermediate results
      * are scaled whenever they threaten to become numerically unstable.</p>
-     *   
+     *
      * @param x the evaluation point.
      * @param epsilon maximum error allowed.
      * @param maxIterations maximum number of convergents
-     * @return the value of the continued fraction evaluated at x. 
+     * @return the value of the continued fraction evaluated at x.
      * @throws MathException if the algorithm fails to converge.
      */
     public double evaluate(double x, double epsilon, int maxIterations)
@@ -143,24 +139,56 @@ public abstract class ContinuedFraction implements Serializable {
             double b = getB(n, x);
             double p2 = a * p1 + b * p0;
             double q2 = a * q1 + b * q0;
+            boolean infinite = false;
             if (Double.isInfinite(p2) || Double.isInfinite(q2)) {
-                // need to scale
-                if (a != 0.0) {
-                    p2 = p1 + (b / a * p0);
-                    q2 = q1 + (b / a * q0);
-                } else if (b != 0) {
-                    p2 = (a / b * p1) + p0;
-                    q2 = (a / b * q1) + q0;
-                } else {
-                    // can not scale an convergent is unbounded.
+                /*
+                 * Need to scale. Try successive powers of the larger of a or b
+                 * up to 5th power. Throw ConvergenceException if one or both
+                 * of p2, q2 still overflow.
+                 */
+                double scaleFactor = 1d;
+                double lastScaleFactor = 1d;
+                final int maxPower = 5;
+                final double scale = FastMath.max(a,b);
+                if (scale <= 0) {  // Can't scale
                     throw new ConvergenceException(
-                        "Continued fraction convergents diverged to +/- infinity for value {0}",
-                        new Object[] { new Double(x) });
+                            LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE,
+                             x);
+                }
+                infinite = true;
+                for (int i = 0; i < maxPower; i++) {
+                    lastScaleFactor = scaleFactor;
+                    scaleFactor *= scale;
+                    if (a != 0.0 && a > b) {
+                        p2 = p1 / lastScaleFactor + (b / scaleFactor * p0);
+                        q2 = q1 / lastScaleFactor + (b / scaleFactor * q0);
+                    } else if (b != 0) {
+                        p2 = (a / scaleFactor * p1) + p0 / lastScaleFactor;
+                        q2 = (a / scaleFactor * q1) + q0 / lastScaleFactor;
+                    }
+                    infinite = Double.isInfinite(p2) || Double.isInfinite(q2);
+                    if (!infinite) {
+                        break;
+                    }
                 }
             }
+
+            if (infinite) {
+               // Scaling failed
+               throw new ConvergenceException(
+                 LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE,
+                  x);
+            }
+
             double r = p2 / q2;
-            relativeError = Math.abs(r / c - 1.0);
-                
+
+            if (Double.isNaN(r)) {
+                throw new ConvergenceException(
+                  LocalizedFormats.CONTINUED_FRACTION_NAN_DIVERGENCE,
+                  x);
+            }
+            relativeError = FastMath.abs(r / c - 1.0);
+
             // prepare for next iteration
             c = p2 / q2;
             p0 = p1;
@@ -171,8 +199,8 @@ public abstract class ContinuedFraction implements Serializable {
 
         if (n >= maxIterations) {
             throw new MaxIterationsExceededException(maxIterations,
-                "Continued fraction convergents failed to converge for value {0}",
-                new Object[] { new Double(x) });
+                LocalizedFormats.NON_CONVERGENT_CONTINUED_FRACTION,
+                x);
         }
 
         return c;

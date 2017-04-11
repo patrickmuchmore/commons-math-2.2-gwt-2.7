@@ -20,7 +20,7 @@ import java.util.Collection;
 
 /**
  * Random data generation utilities.
- * @version $Revision: 615734 $ $Date: 2008-01-27 23:10:03 -0700 (Sun, 27 Jan 2008) $
+ * @version $Revision: 780975 $ $Date: 2009-06-02 11:05:37 +0200 (mar. 02 juin 2009) $
  */
 public interface RandomData {
     /**
@@ -96,7 +96,7 @@ public interface RandomData {
      * @param len length of return string
      * @return the random hex string
      */
-    //String nextSecureHexString(int len);
+    String nextSecureHexString(int len);
 
     /**
      * Generates a uniformly distributed random integer between
@@ -121,7 +121,7 @@ public interface RandomData {
      * @return a random integer greater than or equal to <code>lower</code>
      * and less than or equal to <code>upper</code>.
      */
-    //int nextSecureInt(int lower, int upper);
+    int nextSecureInt(int lower, int upper);
 
     /**
      * Generates a random long integer between <code>lower</code>
@@ -145,7 +145,7 @@ public interface RandomData {
      * @return a long integer greater than or equal to <code>lower</code>
      * and less than or equal to <code>upper</code>.
      */
-    //long nextSecureLong(long lower, long upper);
+    long nextSecureLong(long lower, long upper);
 
     /**
      * Generates a random value from the Poisson distribution with
@@ -268,5 +268,5 @@ public interface RandomData {
      * @param k size of the sample
      * @return random sample of k elements from c
      */
-    Object[] nextSample(Collection c, int k);
+    Object[] nextSample(Collection<?> c, int k);
 }

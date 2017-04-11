@@ -19,18 +19,20 @@ package org.apache.commons.math.distribution;
 import java.io.Serializable;
 
 import org.apache.commons.math.MathException;
+import org.apache.commons.math.MathRuntimeException;
+import org.apache.commons.math.exception.util.LocalizedFormats;
 
 /**
- * Base class for probability distributions.   
- *  
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ * Base class for probability distributions.
+ *
+ * @version $Revision: 1054524 $ $Date: 2011-01-03 05:59:18 +0100 (lun. 03 janv. 2011) $
  */
 public abstract class AbstractDistribution
     implements Distribution, Serializable {
 
     /** Serializable version identifier */
     private static final long serialVersionUID = -38038050983108802L;
-    
+
     /**
      * Default constructor.
      */
@@ -45,7 +47,7 @@ public abstract class AbstractDistribution
      * The default implementation uses the identity</p>
      * <p>
      * P(x0 &le; X &le; x1) = P(X &le; x1) - P(X &le; x0) </p>
-     * 
+     *
      * @param x0 the (inclusive) lower bound
      * @param x1 the (inclusive) upper bound
      * @return the probability that a random variable with this distribution
@@ -58,8 +60,9 @@ public abstract class AbstractDistribution
     public double cumulativeProbability(double x0, double x1)
         throws MathException {
         if (x0 > x1) {
-            throw new IllegalArgumentException
-            ("lower endpoint must be less than or equal to upper endpoint");
+            throw MathRuntimeException.createIllegalArgumentException(
+                  LocalizedFormats.LOWER_ENDPOINT_ABOVE_UPPER_ENDPOINT,
+                  x0, x1);
         }
         return cumulativeProbability(x1) - cumulativeProbability(x0);
     }

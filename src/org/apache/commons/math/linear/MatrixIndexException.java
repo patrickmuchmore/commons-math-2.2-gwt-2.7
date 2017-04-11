@@ -17,30 +17,39 @@
 
 package org.apache.commons.math.linear;
 
+import org.apache.commons.math.MathRuntimeException;
+import org.apache.commons.math.exception.util.DummyLocalizable;
+import org.apache.commons.math.exception.util.Localizable;
+
 /**
- * Thrown when an operation addresses a matrix coordinate (row,col)
+ * Thrown when an operation addresses a matrix coordinate (row, col)
  * which is outside of the dimensions of a matrix.
- * @version $Revision: 512050 $ $Date: 2007-02-26 15:44:18 -0700 (Mon, 26 Feb 2007) $
+ * @version $Revision: 1073255 $ $Date: 2011-02-22 09:42:06 +0100 (mar. 22 févr. 2011) $
  */
-public class MatrixIndexException extends RuntimeException {
+public class MatrixIndexException extends MathRuntimeException {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = -1341109412864309526L;
+    private static final long serialVersionUID = 8120540015829487660L;
 
     /**
-     * Default constructor.
-     * @deprecated as of 1.2 replaced by #MatrixIndexException(String)
+     * Constructs a new instance with specified formatted detail message.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @deprecated as of 2.2 replaced by {@link #MatrixIndexException(Localizable, Object...)}
      */
-    public MatrixIndexException() {
-        this(null);
+    @Deprecated
+    public MatrixIndexException(final String pattern, final Object ... arguments) {
+      this(new DummyLocalizable(pattern), arguments);
     }
 
     /**
-     * Construct an exception with the given message and root cause.
-     * @param message descriptive error message.
+     * Constructs a new instance with specified formatted detail message.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
      */
-    public MatrixIndexException(String message) {
-        super(message);
+    public MatrixIndexException(final Localizable pattern, final Object ... arguments) {
+      super(pattern, arguments);
     }
 
 }

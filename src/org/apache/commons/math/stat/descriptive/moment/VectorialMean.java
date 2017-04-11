@@ -17,13 +17,14 @@
 package org.apache.commons.math.stat.descriptive.moment;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import org.apache.commons.math.DimensionMismatchException;
 
 /**
  * Returns the arithmetic mean of the available vectors.
  * @since 1.2
- * @version $Revision: 619928 $ $Date: 2008-02-08 09:19:17 -0700 (Fri, 08 Feb 2008) $
+ * @version $Revision: 922714 $ $Date: 2010-03-14 02:35:14 +0100 (dim. 14 mars 2010) $
  */
 public class VectorialMean implements Serializable {
 
@@ -31,7 +32,7 @@ public class VectorialMean implements Serializable {
     private static final long serialVersionUID = 8223009086481006892L;
 
     /** Means for each component. */
-    private Mean[] means;
+    private final Mean[] means;
 
     /** Constructs a VectorialMean.
      * @param dimension vectors dimension
@@ -75,6 +76,28 @@ public class VectorialMean implements Serializable {
      */
     public long getN() {
         return (means.length == 0) ? 0 : means[0].getN();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(means);
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof VectorialMean))
+            return false;
+        VectorialMean other = (VectorialMean) obj;
+        if (!Arrays.equals(means, other.means))
+            return false;
+        return true;
     }
 
 }

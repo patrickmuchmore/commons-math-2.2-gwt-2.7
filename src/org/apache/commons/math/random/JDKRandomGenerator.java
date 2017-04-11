@@ -19,13 +19,32 @@ package org.apache.commons.math.random;
 import java.util.Random;
 
 /**
- * Extension of <code>java.util.Random</code> to implement 
+ * Extension of <code>java.util.Random</code> to implement
  * {@link RandomGenerator}.
  *
  * @since 1.1
- * @version $Revision: 628614 $ $Date: 2008-02-17 21:47:53 -0700 (Sun, 17 Feb 2008) $
+ * @version $Revision: 811685 $ $Date: 2009-09-05 19:36:48 +0200 (sam. 05 sept. 2009) $
  */
 public class JDKRandomGenerator extends Random implements RandomGenerator {
-    /** Serializable version identifier */
-    private static final long serialVersionUID = -3561898582944940550L;
+
+    /** Serializable version identifier. */
+    private static final long serialVersionUID = -7745277476784028798L;
+
+    /** {@inheritDoc} */
+    public void setSeed(int seed) {
+        setSeed((long) seed);
+    }
+
+    /** {@inheritDoc} */
+    public void setSeed(int[] seed) {
+        // the following number is the largest prime that fits in 32 bits (it is 2^32 - 5)
+        final long prime = 4294967291l;
+
+        long combined = 0l;
+        for (int s : seed) {
+            combined = combined * prime + s;
+        }
+        setSeed(combined);
+    }
+
 }

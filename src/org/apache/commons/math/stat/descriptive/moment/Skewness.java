@@ -19,6 +19,7 @@ package org.apache.commons.math.stat.descriptive.moment;
 import java.io.Serializable;
 
 import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStatistic;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * Computes the skewness of the available values.
@@ -27,25 +28,25 @@ import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStati
  * <p>
  * skewness = [n / (n -1) (n - 2)] sum[(x_i - mean)^3] / std^3 </p>
  * <p>
- * where n is the number of values, mean is the {@link Mean} and std is the 
+ * where n is the number of values, mean is the {@link Mean} and std is the
  * {@link StandardDeviation} </p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally. </p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 1006299 $ $Date: 2010-10-10 16:47:17 +0200 (dim. 10 oct. 2010) $
  */
 public class Skewness extends AbstractStorelessUnivariateStatistic implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = 7101857578996691352L;    
-    
+    private static final long serialVersionUID = 7101857578996691352L;
+
     /** Third moment on which this statistic is based */
     protected ThirdMoment moment = null;
 
-     /** 
+     /**
      * Determines whether or not this statistic can be incremented or cleared.
      * <p>
      * Statistics based on (constructed from) external moments cannot
@@ -71,8 +72,19 @@ public class Skewness extends AbstractStorelessUnivariateStatistic implements Se
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code Skewness} identical
+     * to the {@code original}
+     *
+     * @param original the {@code Skewness} instance to copy
      */
+    public Skewness(Skewness original) {
+        copy(original, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
         if (incMoment) {
             moment.increment(d);
@@ -83,34 +95,36 @@ public class Skewness extends AbstractStorelessUnivariateStatistic implements Se
      * Returns the value of the statistic based on the values that have been added.
      * <p>
      * See {@link Skewness} for the definition used in the computation.</p>
-     * 
+     *
      * @return the skewness of the available values.
      */
+    @Override
     public double getResult() {
-        
+
         if (moment.n < 3) {
             return Double.NaN;
         }
-        double variance = moment.m2 / (double) (moment.n - 1);
+        double variance = moment.m2 / (moment.n - 1);
         if (variance < 10E-20) {
             return 0.0d;
         } else {
-            double n0 = (double) moment.getN();
+            double n0 = moment.getN();
             return  (n0 * moment.m3) /
-            ((n0 - 1) * (n0 -2) * Math.sqrt(variance) * variance);
+            ((n0 - 1) * (n0 -2) * FastMath.sqrt(variance) * variance);
         }
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getN()
+     * {@inheritDoc}
      */
     public long getN() {
         return moment.getN();
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         if (incMoment) {
             moment.clear();
@@ -124,7 +138,7 @@ public class Skewness extends AbstractStorelessUnivariateStatistic implements Se
      * See {@link Skewness} for the definition used in the computation.</p>
      * <p>
      * Throws <code>IllegalArgumentException</code> if the array is null.</p>
-     * 
+     *
      * @param values the input array
      * @param begin the index of the first array element to include
      * @param length the number of elements to include
@@ -133,7 +147,8 @@ public class Skewness extends AbstractStorelessUnivariateStatistic implements Se
      * @throws IllegalArgumentException if the array is null or the array index
      *  parameters are not valid
      */
-    public double evaluate(final double[] values,final int begin, 
+    @Override
+    public double evaluate(final double[] values,final int begin,
             final int length) {
 
         // Initialize the skewness
@@ -143,31 +158,56 @@ public class Skewness extends AbstractStorelessUnivariateStatistic implements Se
             Mean mean = new Mean();
             // Get the mean and the standard deviation
             double m = mean.evaluate(values, begin, length);
-            
+
             // Calc the std, this is implemented here instead
             // of using the standardDeviation method eliminate
             // a duplicate pass to get the mean
             double accum = 0.0;
             double accum2 = 0.0;
             for (int i = begin; i < begin + length; i++) {
-                accum += Math.pow((values[i] - m), 2.0);
-                accum2 += (values[i] - m);
+                final double d = values[i] - m;
+                accum  += d * d;
+                accum2 += d;
             }
-            double stdDev = Math.sqrt((accum - (Math.pow(accum2, 2) / ((double) length))) /
-                    (double) (length - 1));
-            
+            final double variance = (accum - (accum2 * accum2 / length)) / (length - 1);
+
             double accum3 = 0.0;
             for (int i = begin; i < begin + length; i++) {
-                accum3 += Math.pow(values[i] - m, 3.0d);
+                final double d = values[i] - m;
+                accum3 += d * d * d;
             }
-            accum3 /= Math.pow(stdDev, 3.0d);
-            
+            accum3 /= variance * FastMath.sqrt(variance);
+
             // Get N
             double n0 = length;
-            
+
             // Calculate skewness
             skew = (n0 / ((n0 - 1) * (n0 - 2))) * accum3;
         }
         return skew;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Skewness copy() {
+        Skewness result = new Skewness();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source Skewness to copy
+     * @param dest Skewness to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(Skewness source, Skewness dest) {
+        dest.setData(source.getDataRef());
+        dest.moment = new ThirdMoment(source.moment.copy());
+        dest.incMoment = source.incMoment;
     }
 }

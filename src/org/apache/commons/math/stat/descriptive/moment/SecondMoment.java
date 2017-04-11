@@ -35,18 +35,18 @@ import java.io.Serializable;
  * Returns <code>Double.NaN</code> if no data values have been added and
  * returns <code>0</code> if there is just one value in the data set.</p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 811685 $ $Date: 2009-09-05 19:36:48 +0200 (sam. 05 sept. 2009) $
  */
 public class SecondMoment extends FirstMoment implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = 3942403127395076445L;  
-      
+    private static final long serialVersionUID = 3942403127395076445L;
+
     /** second moment of values that have been added */
     protected double m2;
 
@@ -57,10 +57,22 @@ public class SecondMoment extends FirstMoment implements Serializable {
         super();
         m2 = Double.NaN;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code SecondMoment} identical
+     * to the {@code original}
+     *
+     * @param original the {@code SecondMoment} instance to copy
      */
+    public SecondMoment(SecondMoment original) {
+        super(original);
+        this.m2 = original.m2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
         if (n < 1) {
             m1 = m2 = 0.0;
@@ -70,18 +82,43 @@ public class SecondMoment extends FirstMoment implements Serializable {
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         super.clear();
         m2 = Double.NaN;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return m2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SecondMoment copy() {
+        SecondMoment result = new SecondMoment();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source SecondMoment to copy
+     * @param dest SecondMoment to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(SecondMoment source, SecondMoment dest) {
+        FirstMoment.copy(source, dest);
+        dest.m2 = source.m2;
     }
 
 }

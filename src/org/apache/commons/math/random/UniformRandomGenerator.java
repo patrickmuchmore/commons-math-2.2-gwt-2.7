@@ -17,19 +17,30 @@
 
 package org.apache.commons.math.random;
 
-/** 
+import org.apache.commons.math.util.FastMath;
+
+/**
  * This class implements a normalized uniform random generator.
  * <p>Since it is a normalized random generator, it generates values
- * from a uniform distribution with mean equal to 0 and standard 
+ * from a uniform distribution with mean equal to 0 and standard
  * deviation equal to 1. Generated values fall in the range
  * [-&#x0221A;3, +&#x0221A;3].</p>
- * 
+ *
  * @since 1.2
- * 
- * @version $Revision: 615734 $ $Date: 2008-01-27 23:10:03 -0700 (Sun, 27 Jan 2008) $
+ *
+ * @version $Revision: 990655 $ $Date: 2010-08-29 23:49:40 +0200 (dim. 29 août 2010) $
  */
 
 public class UniformRandomGenerator implements NormalizedRandomGenerator {
+
+    /** Serializable version identifier. */
+    private static final long serialVersionUID = 1569292426375546027L;
+
+    /** Square root of three. */
+    private static final double SQRT3 = FastMath.sqrt(3.0);
+
+    /** Underlying generator. */
+    private final RandomGenerator generator;
 
     /** Create a new generator.
      * @param generator underlying random generator to use
@@ -46,11 +57,5 @@ public class UniformRandomGenerator implements NormalizedRandomGenerator {
     public double nextNormalizedDouble() {
         return SQRT3 * (2 * generator.nextDouble() - 1.0);
     }
-
-    /** Underlying generator. */
-    private RandomGenerator generator;
-
-    /** Square root of three. */
-    private static final double SQRT3 = Math.sqrt(3.0);
 
 }

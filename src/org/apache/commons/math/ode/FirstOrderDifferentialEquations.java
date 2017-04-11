@@ -17,6 +17,8 @@
 
 package org.apache.commons.math.ode;
 
+
+
 /** This interface represents a first order differential equations set.
  *
  * <p>This interface should be implemented by all real first order
@@ -40,25 +42,25 @@ package org.apache.commons.math.ode;
  * @see FirstOrderConverter
  * @see SecondOrderDifferentialEquations
  *
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1073158 $ $Date: 2011-02-21 22:46:52 +0100 (lun. 21 févr. 2011) $
  * @since 1.2
  */
 
 public interface FirstOrderDifferentialEquations {
-    
+
     /** Get the dimension of the problem.
      * @return dimension of the problem
      */
-    public int getDimension();
-    
+    int getDimension();
+
     /** Get the current time derivative of the state vector.
      * @param t current value of the independent <I>time</I> variable
      * @param y array containing the current value of the state vector
      * @param yDot placeholder array where to put the time derivative of the state vector
-     * @throws DerivativeException this exception is propagated to the caller if the
-     * underlying user function triggers one
+     * @throws DerivativeException this user-defined exception should be used if an error is
+     * is triggered by user code
      */
-    public void computeDerivatives(double t, double[] y, double[] yDot)
-    throws DerivativeException;
-    
+    void computeDerivatives(double t, double[] y, double[] yDot)
+        throws DerivativeException;
+
 }

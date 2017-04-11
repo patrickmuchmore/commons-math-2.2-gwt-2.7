@@ -20,7 +20,7 @@ package org.apache.commons.math.distribution;
  * The Pascal distribution.  The Pascal distribution is a special case of the
  * Negative Binomial distribution where the number of successes parameter is an
  * integer.
- * 
+ *
  * There are various ways to express the probability mass and distribution
  * functions for the Pascal distribution.  The convention employed by the
  * library is to express these functions in terms of the number of failures in
@@ -35,35 +35,39 @@ package org.apache.commons.math.distribution;
  * </ul>
  * </p>
  *
- * @version $Revision: 613570 $ $Date: 2008-01-20 08:03:24 -0700 (Sun, 20 Jan 2008) $
+ * @version $Revision: 920852 $ $Date: 2010-03-09 13:53:44 +0100 (mar. 09 mars 2010) $
  * @since 1.2
  */
 public interface PascalDistribution extends IntegerDistribution {
     /**
      * Access the number of successes for this distribution.
-     * 
+     *
      * @return the number of successes
      */
     int getNumberOfSuccesses();
-    
+
     /**
      * Access the probability of success for this distribution.
-     * 
+     *
      * @return the probability of success
      */
     double getProbabilityOfSuccess();
-    
+
     /**
      * Change the number of successes for this distribution.
-     * 
+     *
      * @param successes the new number of successes
+     * @deprecated as of v2.1
      */
+    @Deprecated
     void setNumberOfSuccesses(int successes);
-    
+
     /**
      * Change the probability of success for this distribution.
-     * 
+     *
      * @param p the new probability of success
+     * @deprecated as of v2.1
      */
+    @Deprecated
     void setProbabilityOfSuccess(double p);
 }

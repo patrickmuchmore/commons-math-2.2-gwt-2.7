@@ -23,24 +23,24 @@ import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStati
 /**
  * Returns the sum of the squares of the available values.
  * <p>
- * If there are no values in the dataset, or any of the values are 
+ * If there are no values in the dataset, or any of the values are
  * <code>NaN</code>, then <code>NaN</code> is returned.</p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 1006299 $ $Date: 2010-10-10 16:47:17 +0200 (dim. 10 oct. 2010) $
  */
 public class SumOfSquares extends AbstractStorelessUnivariateStatistic implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = 1460986908574398008L;  
-      
+    private static final long serialVersionUID = 1460986908574398008L;
+
     /** */
     private long n;
-    
+
     /**
      * The currently running sumSq
      */
@@ -53,10 +53,21 @@ public class SumOfSquares extends AbstractStorelessUnivariateStatistic implement
         n = 0;
         value = Double.NaN;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code SumOfSquares} identical
+     * to the {@code original}
+     *
+     * @param original the {@code SumOfSquares} instance to copy
      */
+    public SumOfSquares(SumOfSquares original) {
+        copy(original, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
         if (n == 0) {
             value = d * d;
@@ -67,22 +78,24 @@ public class SumOfSquares extends AbstractStorelessUnivariateStatistic implement
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return value;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getN()
+     * {@inheritDoc}
      */
     public long getN() {
         return n;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         value = Double.NaN;
         n = 0;
@@ -94,7 +107,7 @@ public class SumOfSquares extends AbstractStorelessUnivariateStatistic implement
      * is empty.
      * <p>
      * Throws <code>IllegalArgumentException</code> if the array is null.</p>
-     * 
+     *
      * @param values the input array
      * @param begin index of the first array element to include
      * @param length the number of elements to include
@@ -102,6 +115,7 @@ public class SumOfSquares extends AbstractStorelessUnivariateStatistic implement
      * @throws IllegalArgumentException if the array is null or the array index
      *  parameters are not valid
      */
+    @Override
     public double evaluate(final double[] values,final int begin, final int length) {
         double sumSq = Double.NaN;
         if (test(values, begin, length)) {
@@ -111,6 +125,30 @@ public class SumOfSquares extends AbstractStorelessUnivariateStatistic implement
             }
         }
         return sumSq;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SumOfSquares copy() {
+        SumOfSquares result = new SumOfSquares();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source SumOfSquares to copy
+     * @param dest SumOfSquares to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(SumOfSquares source, SumOfSquares dest) {
+        dest.setData(source.getDataRef());
+        dest.n = source.n;
+        dest.value = source.value;
     }
 
 }

@@ -20,16 +20,17 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 /**
  * An interface representing a univariate real function.
- *  
- * @version $Revision: 480440 $ $Date: 2006-11-29 00:14:12 -0700 (Wed, 29 Nov 2006) $
+ *
+ * @version $Revision: 1070725 $ $Date: 2011-02-15 02:31:12 +0100 (mar. 15 févr. 2011) $
  */
 public interface UnivariateRealFunction {
+
     /**
      * Compute the value for the function.
      * @param x the point for which the function value should be computed
      * @return the value
      * @throws FunctionEvaluationException if the function evaluation fails
      */
-    public double value(double x) throws FunctionEvaluationException;
+    double value(double x) throws FunctionEvaluationException;
 
 }

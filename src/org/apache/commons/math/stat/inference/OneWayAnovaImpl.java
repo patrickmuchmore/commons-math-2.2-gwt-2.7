@@ -16,26 +16,26 @@
  */
 package org.apache.commons.math.stat.inference;
 
-import org.apache.commons.math.MathException;
-import org.apache.commons.math.stat.descriptive.summary.Sum;
-import org.apache.commons.math.stat.descriptive.summary.SumOfSquares;
+import java.util.Collection;
 
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.MathRuntimeException;
 import org.apache.commons.math.distribution.FDistribution;
 import org.apache.commons.math.distribution.FDistributionImpl;
-
-import java.util.Collection;
-import java.util.Iterator;
+import org.apache.commons.math.exception.util.LocalizedFormats;
+import org.apache.commons.math.stat.descriptive.summary.Sum;
+import org.apache.commons.math.stat.descriptive.summary.SumOfSquares;
 
 
 /**
  * Implements one-way ANOVA statistics defined in the {@link OneWayAnovaImpl}
  * interface.
- * 
- * <p>Uses the 
+ *
+ * <p>Uses the
  * {@link org.apache.commons.math.distribution.FDistribution
  *  commons-math F Distribution implementation} to estimate exact p-values.</p>
  *
- * <p>This implementation is based on a description at 
+ * <p>This implementation is based on a description at
  * http://faculty.vassar.edu/lowry/ch13pt1.html</p>
  * <pre>
  * Abbreviations: bg = between groups,
@@ -44,7 +44,7 @@ import java.util.Iterator;
  * </pre>
  *
  * @since 1.2
- * @version $Revision$ $Date$
+ * @version $Revision: 983921 $ $Date: 2010-08-10 12:46:06 +0200 (mar. 10 août 2010) $
  */
 public class OneWayAnovaImpl implements OneWayAnova  {
 
@@ -53,10 +53,10 @@ public class OneWayAnovaImpl implements OneWayAnova  {
      */
     public OneWayAnovaImpl() {
     }
-    
+
     /**
      * {@inheritDoc}<p>
-     * This implementation computes the F statistic using the definitional 
+     * This implementation computes the F statistic using the definitional
      * formula<pre>
      *   F = msbg/mswg</pre>
      * where<pre>
@@ -65,7 +65,7 @@ public class OneWayAnovaImpl implements OneWayAnova  {
      * are as defined <a href="http://faculty.vassar.edu/lowry/ch13pt1.html">
      * here</a></p>
      */
-    public double anovaFValue(Collection categoryData)
+    public double anovaFValue(Collection<double[]> categoryData)
         throws IllegalArgumentException, MathException {
         AnovaStats a = anovaStats(categoryData);
         return a.F;
@@ -81,7 +81,7 @@ public class OneWayAnovaImpl implements OneWayAnova  {
      * where <code>F</code> is the F value and <code>cumulativeProbability</code>
      * is the commons-math implementation of the F distribution.</p>
      */
-    public double anovaPValue(Collection categoryData)
+    public double anovaPValue(Collection<double[]> categoryData)
         throws IllegalArgumentException, MathException {
         AnovaStats a = anovaStats(categoryData);
         FDistribution fdist = new FDistributionImpl(a.dfbg, a.dfwg);
@@ -99,18 +99,20 @@ public class OneWayAnovaImpl implements OneWayAnova  {
      * is the commons-math implementation of the F distribution.</p>
      * <p>True is returned iff the estimated p-value is less than alpha.</p>
      */
-    public boolean anovaTest(Collection categoryData, double alpha)
+    public boolean anovaTest(Collection<double[]> categoryData, double alpha)
         throws IllegalArgumentException, MathException {
         if ((alpha <= 0) || (alpha > 0.5)) {
-            throw new IllegalArgumentException("bad significance level: " + alpha);
+            throw MathRuntimeException.createIllegalArgumentException(
+                  LocalizedFormats.OUT_OF_BOUND_SIGNIFICANCE_LEVEL,
+                  alpha, 0, 0.5);
         }
-        return (anovaPValue(categoryData) < alpha);
+        return anovaPValue(categoryData) < alpha;
     }
 
 
     /**
      * This method actually does the calculations (except P-value).
-     * 
+     *
      * @param categoryData <code>Collection</code> of <code>double[]</code>
      * arrays each containing data for one category
      * @return computed AnovaStats
@@ -118,27 +120,22 @@ public class OneWayAnovaImpl implements OneWayAnova  {
      * preconditions specified in the interface definition
      * @throws MathException if an error occurs computing the Anova stats
      */
-    private AnovaStats anovaStats(Collection categoryData)
+    private AnovaStats anovaStats(Collection<double[]> categoryData)
         throws IllegalArgumentException, MathException {
 
         // check if we have enough categories
         if (categoryData.size() < 2) {
-            throw new IllegalArgumentException(
-                    "ANOVA: two or more categories required");
+            throw MathRuntimeException.createIllegalArgumentException(
+                  LocalizedFormats.TWO_OR_MORE_CATEGORIES_REQUIRED,
+                  categoryData.size());
         }
-        
+
         // check if each category has enough data and all is double[]
-        for (Iterator iterator = categoryData.iterator(); iterator.hasNext();) {
-            double[] array;
-            try {
-                array = (double[])iterator.next();
-            } catch (ClassCastException ex) {
-                throw new IllegalArgumentException(
-                        "ANOVA: categoryData contains non-double[] elements.");
-            }
+        for (double[] array : categoryData) {
             if (array.length <= 1) {
-                throw new IllegalArgumentException(
-                        "ANOVA: one element of categoryData has fewer than 2 values.");
+                throw MathRuntimeException.createIllegalArgumentException(
+                      LocalizedFormats.TWO_OR_MORE_VALUES_IN_CATEGORY_REQUIRED,
+                      array.length);
             }
         }
 
@@ -147,9 +144,8 @@ public class OneWayAnovaImpl implements OneWayAnova  {
         Sum totsum = new Sum();
         SumOfSquares totsumsq = new SumOfSquares();
         int totnum = 0;
-        
-        for (Iterator iterator = categoryData.iterator(); iterator.hasNext();) {
-            double[] data = (double[])iterator.next();
+
+        for (double[] data : categoryData) {
 
             Sum sum = new Sum();
             SumOfSquares sumsq = new SumOfSquares();
@@ -172,7 +168,7 @@ public class OneWayAnovaImpl implements OneWayAnova  {
             double ss = sumsq.getResult() - sum.getResult() * sum.getResult() / num;
             sswg += ss;
         }
-        double sst = totsumsq.getResult() - totsum.getResult() * 
+        double sst = totsumsq.getResult() - totsum.getResult() *
             totsum.getResult()/totnum;
         double ssbg = sst - sswg;
         int dfbg = categoryData.size() - 1;
@@ -183,13 +179,19 @@ public class OneWayAnovaImpl implements OneWayAnova  {
         return new AnovaStats(dfbg, dfwg, F);
     }
 
-    /** 
+    /**
         Convenience class to pass dfbg,dfwg,F values around within AnovaImpl.
         No get/set methods provided.
     */
     private static class AnovaStats {
+
+        /** Degrees of freedom in numerator (between groups). */
         private int dfbg;
+
+        /** Degrees of freedom in denominator (within groups). */
         private int dfwg;
+
+        /** Statistic. */
         private double F;
 
         /**
@@ -198,7 +200,7 @@ public class OneWayAnovaImpl implements OneWayAnova  {
          * @param dfwg degrees of freedom in denominator (within groups)
          * @param F statistic
          */
-        AnovaStats(int dfbg, int dfwg, double F) {
+        private AnovaStats(int dfbg, int dfwg, double F) {
             this.dfbg = dfbg;
             this.dfwg = dfwg;
             this.F = F;

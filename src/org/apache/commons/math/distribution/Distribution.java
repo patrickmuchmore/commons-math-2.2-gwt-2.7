@@ -21,7 +21,7 @@ import org.apache.commons.math.MathException;
 /**
  * Base interface for probability distributions.
  *
- * @version $Revision: 480440 $ $Date: 2006-11-29 00:14:12 -0700 (Wed, 29 Nov 2006) $
+ * @version $Revision: 1054524 $ $Date: 2011-01-03 05:59:18 +0100 (lun. 03 janv. 2011) $
  */
 public interface Distribution {
     /**
@@ -29,7 +29,7 @@ public interface Distribution {
      * to this distribution, this method returns P(X &le; x).  In other words,
      * this method represents the  (cumulative) distribution function, or
      * CDF, for this distribution.
-     * 
+     *
      * @param x the value at which the distribution function is evaluated.
      * @return the probability that a random variable with this
      * distribution takes a value less than or equal to <code>x</code>
@@ -37,19 +37,20 @@ public interface Distribution {
      * computed due to convergence or other numerical errors.
      */
     double cumulativeProbability(double x) throws MathException;
-    
+
     /**
      * For a random variable X whose values are distributed according
      * to this distribution, this method returns P(x0 &le; X &le; x1).
-     * 
+     *
      * @param x0 the (inclusive) lower bound
      * @param x1 the (inclusive) upper bound
      * @return the probability that a random variable with this distribution
-     * will take a value between <code>x0</code> and <code>x1</code>, 
+     * will take a value between <code>x0</code> and <code>x1</code>,
      * including the endpoints
      * @throws MathException if the cumulative probability can not be
      * computed due to convergence or other numerical errors.
      * @throws IllegalArgumentException if <code>x0 > x1</code>
      */
     double cumulativeProbability(double x0, double x1) throws MathException;
+
 }

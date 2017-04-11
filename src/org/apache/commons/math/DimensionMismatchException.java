@@ -16,27 +16,34 @@
  */
 package org.apache.commons.math;
 
+import org.apache.commons.math.exception.util.LocalizedFormats;
+
 /**
  * Error thrown when two dimensions differ.
- * 
+ *
  * @since 1.2
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1061778 $ $Date: 2011-01-21 13:12:39 +0100 (ven. 21 janv. 2011) $
+ * @deprecated in 2.2 (to be removed in 3.0). Please use its equivalent from package
+ * {@link org.apache.commons.math.exception}.
  */
 public class DimensionMismatchException extends MathException {
-    
+
     /** Serializable version identifier */
     private static final long serialVersionUID = -1316089546353786411L;
+
+    /** First dimension. */
+    private final int dimension1;
+
+    /** Second dimension. */
+    private final int dimension2;
 
     /**
      * Construct an exception from the mismatched dimensions
      * @param dimension1 first dimension
      * @param dimension2 second dimension
      */
-    public DimensionMismatchException(int dimension1, int dimension2) {
-        super("dimension mismatch {0} != {1}",
-              new Object[] {
-                new Integer(dimension1), new Integer(dimension2)
-              });
+    public DimensionMismatchException(final int dimension1, final int dimension2) {
+        super(LocalizedFormats.DIMENSIONS_MISMATCH_SIMPLE, dimension1, dimension2);
         this.dimension1 = dimension1;
         this.dimension2 = dimension2;
     }
@@ -48,7 +55,7 @@ public class DimensionMismatchException extends MathException {
     public int getDimension1() {
         return dimension1;
     }
-    
+
     /**
      * Get the second dimension
      * @return second dimension
@@ -57,10 +64,4 @@ public class DimensionMismatchException extends MathException {
         return dimension2;
     }
 
-    /** First dimension. */
-    private int dimension1;
-    
-    /** Second dimension. */
-    private int dimension2;
-    
 }

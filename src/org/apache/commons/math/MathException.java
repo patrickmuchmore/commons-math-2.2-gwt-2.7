@@ -17,50 +17,34 @@
 package org.apache.commons.math;
 
 import java.io.PrintStream;
-//import java.io.PrintWriter;
-//import java.text.MessageFormat;
+import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.MissingResourceException;
-//import java.util.ResourceBundle;
+
+import org.apache.commons.math.exception.MathThrowable;
+import org.apache.commons.math.exception.util.DummyLocalizable;
+import org.apache.commons.math.exception.util.Localizable;
+import org.apache.commons.math.exception.util.LocalizedFormats;
 
 
 /**
-* Base class for commons-math checked exceptions.
-* <p>
-* Supports nesting, emulating JDK 1.4 behavior if necessary.</p>
-* <p>
-* Adapted from {@link org.apache.commons.collections.FunctorException}.</p>
-* 
-* @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
-*/
-public class MathException extends Exception {
-    
-    /** Serializable version identifier */
-    private static final long serialVersionUID = -8602234299177097102L;
+ * Base class for commons-math checked exceptions.
+ * <p>
+ * Supports nesting, emulating JDK 1.4 behavior if necessary.</p>
+ * <p>
+ * Adapted from <a href="http://commons.apache.org/collections/api-release/org/apache/commons/collections/FunctorException.html"/>.</p>
+ *
+ * @version $Revision: 1070725 $ $Date: 2011-02-15 02:31:12 +0100 (mar. 15 févr. 2011) $
+ */
+public class MathException extends Exception implements MathThrowable {
 
-    /**
-     * Does JDK support nested exceptions?
-     */
-//    private static final boolean JDK_SUPPORTS_NESTED;
-    
-//    static {
-//        boolean flag = false;
-//        try {
-//            Throwable.class.getDeclaredMethod("getCause", new Class[0]);
-//            flag = true;
-//        } catch (NoSuchMethodException ex) {
-//            flag = false;
-//        }
-//        JDK_SUPPORTS_NESTED = flag;
-//    }
+    /** Serializable version identifier. */
+    private static final long serialVersionUID = 7428019509644517071L;
 
-    /** Cache for resources bundle. */
-//  private static ResourceBundle cachedResources = null;
- 
     /**
      * Pattern used to build the message.
      */
-    private final String pattern;
+    private final Localizable pattern;
 
     /**
      * Arguments used to build the message.
@@ -68,78 +52,12 @@ public class MathException extends Exception {
     private final Object[] arguments;
 
     /**
-     * Root cause of the exception
-     */
-    private final Throwable rootCause;
-    
-    /**
-     * Translate a string to a given locale.
-     * @param s string to translate
-     * @param locale locale into which to translate the string
-     * @return translated string or original string
-     * for unsupported locales or unknown strings
-     */
-    private static String translate(String s, Locale locale) {
-      return s;
-//        try {
-//            if ((cachedResources == null) || (! cachedResources.getLocale().equals(locale))) {
-//                // caching the resource bundle
-//                cachedResources =
-//                    ResourceBundle.getBundle("org.apache.commons.math.MessagesResources", locale);
-//            }
-//
-//            if (cachedResources.getLocale().getLanguage().equals(locale.getLanguage())) {
-//                // the value of the resource is the translated string
-//                return cachedResources.getString(s);
-//            }
-//            
-//        } catch (MissingResourceException mre) {
-//            // do nothing here
-//        }
-
-        // the locale is not supported or the resource is unknown
-        // don't translate and fall back to using the string as is
-//        return s;
-    }
-
-    /**
-     * Builds a message string by from a pattern and its arguments.
-     * @param pattern format specifier
-     * @param arguments format arguments
-     * @param locale Locale in which the message should be translated
-     * @return a message string
-     */
-    private static String buildMessage(String pattern, Object[] arguments, Locale locale) {
-        // do it the hard way, for Java 1.3. compatibility
-        //MessageFormat mf = new MessageFormat(translate(pattern, locale));
-        //mf.setLocale(locale);
-        //return mf.format(arguments);
-        return String.format(pattern, arguments);
-    }
-
-    /**
      * Constructs a new <code>MathException</code> with no
      * detail message.
      */
     public MathException() {
-        super();
-        this.pattern   = null;
-        this.arguments = new Object[0];
-        this.rootCause = null;
-    }
-    
-    /**
-     * Constructs a new <code>MathException</code> with specified
-     * detail message.
-     *
-     * @param msg  the error message.
-     * @deprecated as of 1.2, replaced by {@link #MathException(String, Object[])}
-     */
-    public MathException(String msg) {
-        super(msg);
-        this.pattern   = msg;
-        this.arguments = new Object[0];
-        this.rootCause = null;
+        this.pattern   = LocalizedFormats.SIMPLE_MESSAGE;
+        this.arguments = new Object[] { "" };
     }
 
     /**
@@ -148,13 +66,24 @@ public class MathException extends Exception {
      * Message formatting is delegated to {@link java.text.MessageFormat}.
      * @param pattern format specifier
      * @param arguments format arguments
+     * @deprecated as of 2.2 replaced by {@link #MathException(Localizable, Object...)}
      */
-    public MathException(String pattern, Object[] arguments) {
-      super(buildMessage(pattern, arguments, Locale.US));
+    @Deprecated
+    public MathException(String pattern, Object ... arguments) {
+      this(new DummyLocalizable(pattern), arguments);
+    }
+
+    /**
+     * Constructs a new <code>MathException</code> with specified
+     * formatted detail message.
+     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
+     */
+    public MathException(Localizable pattern, Object ... arguments) {
       this.pattern   = pattern;
-//      this.arguments = (Object[]) arguments.clone();
-      this.arguments = ArrayUtil.cloneObject(arguments);
-      this.rootCause = null;
+      this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
     }
 
     /**
@@ -165,119 +94,124 @@ public class MathException extends Exception {
      *                   to be thrown.
      */
     public MathException(Throwable rootCause) {
-        super((rootCause == null ? null : rootCause.getMessage()));
-        this.pattern   = getMessage();
-        this.arguments = new Object[0];
-        this.rootCause = rootCause;
-    }
-    
-    /**
-     * Constructs a new <code>MathException</code> with specified
-     * detail message and nested <code>Throwable</code> root cause.
-     *
-     * @param msg  the error message.
-     * @param rootCause  the exception or error that caused this exception
-     *                   to be thrown.
-     * @deprecated as of 1.2, replaced by {@link #MathException(String, Object[], Throwable)}
-     */
-    public MathException(String msg, Throwable rootCause) {
-        super(msg);
-        this.pattern   = msg;
-        this.arguments = new Object[0];
-        this.rootCause = rootCause;
+        super(rootCause);
+        this.pattern   = LocalizedFormats.SIMPLE_MESSAGE;
+        this.arguments = new Object[] { (rootCause == null) ? "" : rootCause.getMessage() };
     }
 
     /**
      * Constructs a new <code>MathException</code> with specified
      * formatted detail message and nested <code>Throwable</code> root cause.
      * Message formatting is delegated to {@link java.text.MessageFormat}.
-     * @param pattern format specifier
-     * @param arguments format arguments
      * @param rootCause the exception or error that caused this exception
      * to be thrown.
+     * @param pattern format specifier
+     * @param arguments format arguments
      * @since 1.2
+     * @deprecated as of 2.2 replaced by {@link #MathException(Throwable, Localizable, Object...)}
      */
-    public MathException(String pattern, Object[] arguments, Throwable rootCause) {
-      super(buildMessage(pattern, arguments, Locale.US));
+    @Deprecated
+    public MathException(Throwable rootCause, String pattern, Object ... arguments) {
+        this(rootCause, new DummyLocalizable(pattern), arguments);
+    }
+
+    /**
+     * Constructs a new <code>MathException</code> with specified
+     * formatted detail message and nested <code>Throwable</code> root cause.
+     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param rootCause the exception or error that caused this exception
+     * to be thrown.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
+     */
+    public MathException(Throwable rootCause, Localizable pattern, Object ... arguments) {
+      super(rootCause);
       this.pattern   = pattern;
-//    this.arguments = (Object[]) arguments.clone();
-      this.arguments = ArrayUtil.cloneObject(arguments);
-      this.rootCause = rootCause;
+      this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
     }
 
     /** Gets the pattern used to build the message of this throwable.
      *
      * @return the pattern used to build the message of this throwable
      * @since 1.2
+     * @deprecated as of 2.2 replaced by {@link #getSpecificPattern()} and {@link #getGeneralPattern()}
      */
+    @Deprecated
     public String getPattern() {
+        return pattern.getSourceString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    public Localizable getSpecificPattern() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    public Localizable getGeneralPattern() {
         return pattern;
     }
 
-    /** Gets the arguments used to build the message of this throwable.
-     *
-     * @return the arguments used to build the message of this throwable
-     * @since 1.2
-     */
+    /** {@inheritDoc} */
     public Object[] getArguments() {
-//    return (Object[]) arguments.clone();
-      return ArrayUtil.cloneObject(arguments);
+        return arguments.clone();
     }
 
     /** Gets the message in a specified locale.
      *
      * @param locale Locale in which the message should be translated
-     * 
+     *
      * @return localized message
      * @since 1.2
      */
-    public String getMessage(Locale locale) {
-        return (pattern == null) ? null : buildMessage(pattern, arguments, locale);
+    public String getMessage(final Locale locale) {
+        if (pattern != null) {
+            return new MessageFormat(pattern.getLocalizedString(locale), locale).format(arguments);
+        }
+        return "";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getMessage() {
+        return getMessage(Locale.US);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getLocalizedMessage() {
+        return getMessage(Locale.getDefault());
     }
 
     /**
-     * Gets the cause of this throwable.
-     * 
-     * @return  the cause of this throwable, or <code>null</code>
-     */
-    public Throwable getCause() {
-        return rootCause;
-    }
-    
-    /**
      * Prints the stack trace of this exception to the standard error stream.
      */
+    @Override
     public void printStackTrace() {
         printStackTrace(System.err);
     }
-    
+
     /**
      * Prints the stack trace of this exception to the specified stream.
      *
      * @param out  the <code>PrintStream</code> to use for output
      */
-//    public void printStackTrace(PrintStream out) {
-//        synchronized (out) {
-//            PrintWriter pw = new PrintWriter(out, false);
-//            printStackTrace(pw);
-//            // Flush the PrintWriter before it's GC'ed.
-//            pw.flush();
-//        }
-//    }
-    
-    /**
-     * Prints the stack trace of this exception to the specified writer.
-     *
-     * @param out  the <code>PrintWriter</code> to use for output
-     */
-//    public void printStackTrace(PrintWriter out) {
-//        synchronized (out) {
-//            super.printStackTrace(out);
-//            if (rootCause != null && JDK_SUPPORTS_NESTED == false) {
-//                out.print("Caused by: ");
-//                rootCause.printStackTrace(out);
-//            }
-//        }
-//    }
+    @Override
+    public void printStackTrace(PrintStream out) {
+        synchronized (out) {
+            PrintWriter pw = new PrintWriter(out, false);
+            printStackTrace(pw);
+            // Flush the PrintWriter before it's GC'ed.
+            pw.flush();
+        }
+    }
 
 }

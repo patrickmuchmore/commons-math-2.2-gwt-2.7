@@ -17,6 +17,8 @@
 
 package org.apache.commons.math.ode;
 
+import org.apache.commons.math.ode.DerivativeException;
+
 /** This class converts second order differential equations to first
  * order ones.
  *
@@ -49,18 +51,32 @@ package org.apache.commons.math.ode;
  * @see FirstOrderIntegrator
  * @see FirstOrderDifferentialEquations
  * @see SecondOrderDifferentialEquations
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1073158 $ $Date: 2011-02-21 22:46:52 +0100 (lun. 21 févr. 2011) $
  * @since 1.2
  */
 
-public class FirstOrderConverter
-  implements FirstOrderDifferentialEquations {
+public class FirstOrderConverter implements FirstOrderDifferentialEquations {
+
+    /** Underlying second order equations set. */
+    private final SecondOrderDifferentialEquations equations;
+
+    /** second order problem dimension. */
+    private final int dimension;
+
+    /** state vector. */
+    private final double[] z;
+
+    /** first time derivative of the state vector. */
+    private final double[] zDot;
+
+    /** second time derivative of the state vector. */
+    private final double[] zDDot;
 
   /** Simple constructor.
    * Build a converter around a second order equations set.
    * @param equations second order equations set to convert
    */
-  public FirstOrderConverter (SecondOrderDifferentialEquations equations) {
+  public FirstOrderConverter (final SecondOrderDifferentialEquations equations) {
       this.equations = equations;
       dimension      = equations.getDimension();
       z              = new double[dimension];
@@ -84,8 +100,8 @@ public class FirstOrderConverter
    * @throws DerivativeException this exception is propagated to the caller if the
    * underlying user function triggers one
    */
-  public void computeDerivatives(double t, double[] y, double[] yDot)
-  throws DerivativeException {
+  public void computeDerivatives(final double t, final double[] y, final double[] yDot)
+      throws DerivativeException {
 
     // split the state vector in two
     System.arraycopy(y, 0,         z,    0, dimension);
@@ -97,22 +113,7 @@ public class FirstOrderConverter
     // build the result state derivative
     System.arraycopy(zDot,  0, yDot, 0,         dimension);
     System.arraycopy(zDDot, 0, yDot, dimension, dimension);
-    
+
   }
-
-  /** Underlying second order equations set. */
-  private SecondOrderDifferentialEquations equations;
-
-  /** second order problem dimension. */
-  private int dimension;
-
-  /** state vector. */
-  private double[] z;
-
-  /** first time derivative of the state vector. */
-  private double[] zDot;
-
-  /** second time derivative of the state vector. */
-  private double[] zDDot;
 
 }

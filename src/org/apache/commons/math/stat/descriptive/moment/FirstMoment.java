@@ -17,7 +17,6 @@
 package org.apache.commons.math.stat.descriptive.moment;
 
 import java.io.Serializable;
-
 import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStatistic;
 
 /**
@@ -38,31 +37,32 @@ import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStati
  * <p>
  *  Returns <code>Double.NaN</code> if the dataset is empty.</p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
  *
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ * @version $Revision: 1006299 $ $Date: 2010-10-10 16:47:17 +0200 (dim. 10 oct. 2010) $
  */
-public class FirstMoment extends AbstractStorelessUnivariateStatistic 
+public class FirstMoment extends AbstractStorelessUnivariateStatistic
     implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = -803343206421984070L; 
-    
+    private static final long serialVersionUID = 6112755307178490473L;
+
+
     /** Count of values that have been added */
     protected long n;
 
     /** First moment of values that have been added */
     protected double m1;
-    
-    /** 
+
+    /**
      * Deviation of most recently added value from previous first moment.
      * Retained to prevent repeated computation in higher order moments.
      */
     protected double dev;
-    
+
     /**
      * Deviation of most recently added value from previous first moment,
      * normalized by previous sample size.  Retained to prevent repeated
@@ -79,24 +79,37 @@ public class FirstMoment extends AbstractStorelessUnivariateStatistic
         dev = Double.NaN;
         nDev = Double.NaN;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code FirstMoment} identical
+     * to the {@code original}
+     *
+     * @param original the {@code FirstMoment} instance to copy
      */
+     public FirstMoment(FirstMoment original) {
+         super();
+         copy(original, this);
+     }
+
+    /**
+     * {@inheritDoc}
+     */
+     @Override
     public void increment(final double d) {
         if (n == 0) {
             m1 = 0.0;
         }
         n++;
-        double n0 = (double) n;
+        double n0 = n;
         dev = d - m1;
         nDev = dev / n0;
         m1 += nDev;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         m1 = Double.NaN;
         n = 0;
@@ -105,16 +118,43 @@ public class FirstMoment extends AbstractStorelessUnivariateStatistic
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return m1;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getN()
+     * {@inheritDoc}
      */
     public long getN() {
         return n;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public FirstMoment copy() {
+        FirstMoment result = new FirstMoment();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source FirstMoment to copy
+     * @param dest FirstMoment to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(FirstMoment source, FirstMoment dest) {
+        dest.setData(source.getDataRef());
+        dest.n = source.n;
+        dest.m1 = source.m1;
+        dest.dev = source.dev;
+        dest.nDev = source.nDev;
     }
 }

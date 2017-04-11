@@ -17,30 +17,51 @@
 
 package org.apache.commons.math.linear;
 
+import org.apache.commons.math.MathRuntimeException;
+import org.apache.commons.math.exception.util.DummyLocalizable;
+import org.apache.commons.math.exception.util.Localizable;
+
 /**
  * Thrown when a system attempts an operation on a matrix, and
  * that matrix does not satisfy the preconditions for the
  * aforementioned operation.
- * @version $Revision: 480440 $ $Date: 2006-11-29 00:14:12 -0700 (Wed, 29 Nov 2006) $
+ * @version $Revision: 1073253 $ $Date: 2011-02-22 09:40:05 +0100 (mar. 22 févr. 2011) $
  */
-public class InvalidMatrixException extends RuntimeException {
+public class InvalidMatrixException extends MathRuntimeException {
 
-    /** Serializable version identifier */
-    private static final long serialVersionUID = 5318837237354354107L;
+    /** Serializable version identifier. */
+    private static final long serialVersionUID = -2068020346562029801L;
 
     /**
-     * Default constructor.
+     * Construct an exception with the given message.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.0
+     * @deprecated since 2.2 replaced by {@link #InvalidMatrixException(Localizable, Object...)}
      */
-    public InvalidMatrixException() {
-        this(null);
+    @Deprecated
+    public InvalidMatrixException(final String pattern, final Object ... arguments) {
+        this(new DummyLocalizable(pattern), arguments);
     }
 
     /**
      * Construct an exception with the given message.
-     * @param message descriptive error message.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
      */
-    public InvalidMatrixException(String message) {
-        super(message);
+    public InvalidMatrixException(final Localizable pattern, final Object ... arguments) {
+        super(pattern, arguments);
+    }
+
+    /**
+     * Construct an exception with the given message.
+     * @param cause the exception or error that caused this exception
+     * to be thrown.
+     * @since 2.0
+     */
+    public InvalidMatrixException(final Throwable cause) {
+        super(cause);
     }
 
 }

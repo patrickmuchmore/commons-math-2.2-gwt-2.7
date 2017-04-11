@@ -16,32 +16,49 @@
  */
 package org.apache.commons.math;
 
+import org.apache.commons.math.exception.util.DummyLocalizable;
+import org.apache.commons.math.exception.util.Localizable;
+import org.apache.commons.math.exception.util.LocalizedFormats;
+
 /**
  * Error thrown when a numerical computation can not be performed because the
  * numerical result failed to converge to a finite value.
  *
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 983921 $ $Date: 2010-08-10 12:46:06 +0200 (mar. 10 août 2010) $
  */
 public class ConvergenceException extends MathException {
-    
+
     /** Serializable version identifier */
-    private static final long serialVersionUID = 4380655778005469702L;
+    private static final long serialVersionUID = -1111352570797662604L;
 
     /**
      * Default constructor.
      */
     public ConvergenceException() {
-        super("Convergence failed", new Object[0]);
+        super(LocalizedFormats.CONVERGENCE_FAILED);
     }
-    
+
     /**
      * Constructs an exception with specified formatted detail message.
      * Message formatting is delegated to {@link java.text.MessageFormat}.
      * @param pattern format specifier
      * @param arguments format arguments
      * @since 1.2
+     * @deprecated as of 2.2 replaced by {@link #ConvergenceException(Localizable, Object...)}
      */
-    public ConvergenceException(String pattern, Object[] arguments) {
+    @Deprecated
+    public ConvergenceException(String pattern, Object ... arguments) {
+        this(new DummyLocalizable(pattern), arguments);
+    }
+
+    /**
+     * Constructs an exception with specified formatted detail message.
+     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
+     */
+    public ConvergenceException(Localizable pattern, Object ... arguments) {
         super(pattern, arguments);
     }
 
@@ -56,39 +73,27 @@ public class ConvergenceException extends MathException {
     /**
      * Constructs an exception with specified formatted detail message and root cause.
      * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param cause  the exception or error that caused this exception to be thrown
      * @param pattern format specifier
      * @param arguments format arguments
-     * @param cause  the exception or error that caused this exception to be thrown
      * @since 1.2
+     * @deprecated as of 2.2 replaced by {@link #ConvergenceException(Throwable, Localizable, Object...)}
      */
-    public ConvergenceException(String pattern, Object[] arguments, Throwable cause) {
-        super(pattern, arguments, cause);
+    @Deprecated
+    public ConvergenceException(Throwable cause, String pattern, Object ... arguments) {
+        this(cause, new DummyLocalizable(pattern), arguments);
     }
-    
+
     /**
-     * Constructs a new <code>ConvergenceException</code> with specified
-     * detail message and nested <code>Throwable</code> root cause.
-     *
-     * @param msg  the error message.
-     * @param rootCause  the exception or error that caused this exception
-     * to be thrown.
-     * @deprecated as of 1.2, replaced by 
-     * {@link #ConvergenceException(String, Object[], Throwable)}
+     * Constructs an exception with specified formatted detail message and root cause.
+     * Message formatting is delegated to {@link java.text.MessageFormat}.
+     * @param cause  the exception or error that caused this exception to be thrown
+     * @param pattern format specifier
+     * @param arguments format arguments
+     * @since 2.2
      */
-    public ConvergenceException(String msg, Throwable rootCause) {
-        super(msg, rootCause);
-    }
-    
-    /**
-     * Constructs a new <code>ConvergenceException</code> with specified
-     * detail message.
-     *
-     * @param msg  the error message.
-     * @deprecated as of 1.2, replaced by 
-     * {@link #ConvergenceException(String, Object[])}
-     */
-    public ConvergenceException(String msg) {
-        super(msg);
+    public ConvergenceException(Throwable cause, Localizable pattern, Object ... arguments) {
+        super(cause, pattern, arguments);
     }
 
 }

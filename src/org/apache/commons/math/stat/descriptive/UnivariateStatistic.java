@@ -16,22 +16,17 @@
  */
 package org.apache.commons.math.stat.descriptive;
 
-import java.io.Serializable;
 
 /**
- * Base evaluation interface implemented by all statistics.
- * <p>
- * Includes "stateless" <code>evaluate</code> methods that take
- * <code>double[]</code> arrays as input and return the value of the statistic
- * applied to the input values.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ * Base interface implemented by all statistics.
+ *
+ * @version $Revision: 811685 $ $Date: 2009-09-05 19:36:48 +0200 (sam. 05 sept. 2009) $
  */
-public interface UnivariateStatistic extends Serializable {
+public interface UnivariateStatistic {
 
     /**
      * Returns the result of evaluating the statistic over the input array.
-     * 
+     *
      * @param values input array
      * @return the value of the statistic applied to the input array
      */
@@ -40,12 +35,19 @@ public interface UnivariateStatistic extends Serializable {
     /**
      * Returns the result of evaluating the statistic over the specified entries
      * in the input array.
-     * 
+     *
      * @param values the input array
      * @param begin the index of the first element to include
      * @param length the number of elements to include
      * @return the value of the statistic applied to the included array entries
      */
     double evaluate(double[] values, int begin, int length);
+
+    /**
+     * Returns a copy of the statistic with the same internal state.
+     *
+     * @return a copy of the statistic
+     */
+    UnivariateStatistic copy();
 
 }

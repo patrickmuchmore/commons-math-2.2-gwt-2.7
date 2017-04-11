@@ -18,6 +18,7 @@ package org.apache.commons.math.stat.descriptive.moment;
 
 import java.io.Serializable;
 
+
 /**
  * Computes a statistic related to the Third Central Moment.  Specifically,
  * what is computed is the sum of cubed deviations from the sample mean.
@@ -36,24 +37,24 @@ import java.io.Serializable;
  * Returns <code>Double.NaN</code> if no data values have been added and
  * returns <code>0</code> if there is just one value in the data set.</p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 811685 $ $Date: 2009-09-05 19:36:48 +0200 (sam. 05 sept. 2009) $
  */
 public class ThirdMoment extends SecondMoment implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = -7818711964045118679L;  
-      
+    private static final long serialVersionUID = -7818711964045118679L;
+
     /** third moment of values that have been added */
     protected double m3;
 
      /**
-     * Square of deviation of most recently added value from previous first 
-     * moment, normalized by previous sample size.  Retained to prevent 
+     * Square of deviation of most recently added value from previous first
+     * moment, normalized by previous sample size.  Retained to prevent
      * repeated computation in higher order moments.  nDevSq = nDev * nDev.
      */
     protected double nDevSq;
@@ -68,34 +69,71 @@ public class ThirdMoment extends SecondMoment implements Serializable {
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code ThirdMoment} identical
+     * to the {@code original}
+     *
+     * @param original the {@code ThirdMoment} instance to copy
      */
+    public ThirdMoment(ThirdMoment original) {
+        copy(original, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
         if (n < 1) {
             m3 = m2 = m1 = 0.0;
-        }  
-       
+        }
+
         double prevM2 = m2;
         super.increment(d);
         nDevSq = nDev * nDev;
-        double n0 = (double) n;
+        double n0 = n;
         m3 = m3 - 3.0 * nDev * prevM2 + (n0 - 1) * (n0 - 2) * nDevSq * dev;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return m3;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         super.clear();
         m3 = Double.NaN;
         nDevSq = Double.NaN;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ThirdMoment copy() {
+        ThirdMoment result = new ThirdMoment();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source ThirdMoment to copy
+     * @param dest ThirdMoment to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(ThirdMoment source, ThirdMoment dest) {
+        SecondMoment.copy(source, dest);
+        dest.m3 = source.m3;
+        dest.nDevSq = source.nDevSq;
     }
 
 }

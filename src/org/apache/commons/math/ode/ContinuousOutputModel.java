@@ -18,8 +18,15 @@
 package org.apache.commons.math.ode;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.io.Serializable;
+
+import org.apache.commons.math.MathRuntimeException;
+import org.apache.commons.math.ode.DerivativeException;
+import org.apache.commons.math.exception.util.LocalizedFormats;
+import org.apache.commons.math.ode.sampling.StepHandler;
+import org.apache.commons.math.ode.sampling.StepInterpolator;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * This class stores all information provided by an ODE integrator
@@ -44,14 +51,14 @@ import java.io.Serializable;
  * get the model value at any time or to navigate through the
  * data).</p>
  *
- * <p>If problem modelization is done with several separate
+ * <p>If problem modeling is done with several separate
  * integration phases for contiguous intervals, the same
  * ContinuousOutputModel can be used as step handler for all
  * integration phases as long as they are performed in order and in
  * the same direction. As an example, one can extrapolate the
  * trajectory of a satellite with one model (i.e. one set of
  * differential equations) up to the beginning of a maneuver, use
- * another more complex model including thrusters modelization and
+ * another more complex model including thrusters modeling and
  * accurate attitude control during the maneuver, and revert to the
  * first model after the end of the maneuver. If the same continuous
  * output model handles the steps of all integration phases, the user
@@ -70,34 +77,53 @@ import java.io.Serializable;
  * ContinuousOutputModel instance can be important if the state vector
  * is large, if the integration interval is long or if the steps are
  * small (which can result from small tolerance settings in {@link
- * AdaptiveStepsizeIntegrator adaptive step size integrators}).</p>
+ * org.apache.commons.math.ode.nonstiff.AdaptiveStepsizeIntegrator adaptive
+ * step size integrators}).</p>
  *
  * @see StepHandler
  * @see StepInterpolator
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 1073158 $ $Date: 2011-02-21 22:46:52 +0100 (lun. 21 févr. 2011) $
  * @since 1.2
  */
 
 public class ContinuousOutputModel
   implements StepHandler, Serializable {
 
+    /** Serializable version identifier */
+    private static final long serialVersionUID = -1417964919405031606L;
+
+    /** Initial integration time. */
+    private double initialTime;
+
+    /** Final integration time. */
+    private double finalTime;
+
+    /** Integration direction indicator. */
+    private boolean forward;
+
+    /** Current interpolator index. */
+    private int index;
+
+    /** Steps table. */
+    private List<StepInterpolator> steps;
+
   /** Simple constructor.
    * Build an empty continuous output model.
    */
   public ContinuousOutputModel() {
-    steps = new ArrayList();
+    steps = new ArrayList<StepInterpolator>();
     reset();
   }
 
   /** Append another model at the end of the instance.
    * @param model model to add at the end of the instance
-   * @exception DerivativeException if some step interpolators from
-   * the appended model cannot be copied
+   * @exception DerivativeException if user code called from step interpolator
+   * finalization triggers one
    * @exception IllegalArgumentException if the model to append is not
    * compatible with the instance (dimension of the state vector,
    * propagation direction, hole between the dates)
    */
-  public void append(ContinuousOutputModel model)
+  public void append(final ContinuousOutputModel model)
     throws DerivativeException {
 
     if (model.steps.size() == 0) {
@@ -110,30 +136,34 @@ public class ContinuousOutputModel
     } else {
 
       if (getInterpolatedState().length != model.getInterpolatedState().length) {
-        throw new IllegalArgumentException("state vector dimension mismatch");
+          throw MathRuntimeException.createIllegalArgumentException(
+                LocalizedFormats.DIMENSIONS_MISMATCH_SIMPLE,
+                getInterpolatedState().length, model.getInterpolatedState().length);
       }
 
       if (forward ^ model.forward) {
-        throw new IllegalArgumentException("propagation direction mismatch");
+          throw MathRuntimeException.createIllegalArgumentException(
+                LocalizedFormats.PROPAGATION_DIRECTION_MISMATCH);
       }
 
-      StepInterpolator lastInterpolator = (StepInterpolator) steps.get(index);
-      double current  = lastInterpolator.getCurrentTime();
-      double previous = lastInterpolator.getPreviousTime();
-      double step = current - previous;
-      double gap = model.getInitialTime() - current;
-      if (Math.abs(gap) > 1.0e-3 * Math.abs(step)) {
-        throw new IllegalArgumentException("hole between time ranges");
+      final StepInterpolator lastInterpolator = steps.get(index);
+      final double current  = lastInterpolator.getCurrentTime();
+      final double previous = lastInterpolator.getPreviousTime();
+      final double step = current - previous;
+      final double gap = model.getInitialTime() - current;
+      if (FastMath.abs(gap) > 1.0e-3 * FastMath.abs(step)) {
+        throw MathRuntimeException.createIllegalArgumentException(
+              LocalizedFormats.HOLE_BETWEEN_MODELS_TIME_RANGES, FastMath.abs(gap));
       }
 
     }
 
-    for (Iterator iter = model.steps.iterator(); iter.hasNext(); ) {
-      steps.add(((AbstractStepInterpolator) iter.next()).copy());
+    for (StepInterpolator interpolator : model.steps) {
+      steps.add(interpolator.copy());
     }
 
     index = steps.size() - 1;
-    finalTime = ((StepInterpolator) steps.get(index)).getCurrentTime();
+    finalTime = (steps.get(index)).getCurrentTime();
 
   }
 
@@ -164,23 +194,21 @@ public class ContinuousOutputModel
    * the instance for later use.
    * @param interpolator interpolator for the last accepted step.
    * @param isLast true if the step is the last one
-   * @throws DerivativeException this exception is propagated to the
-   * caller if the underlying user function triggers one
+   * @exception DerivativeException if user code called from step interpolator
+   * finalization triggers one
    */
-  public void handleStep(StepInterpolator interpolator, boolean isLast)
+  public void handleStep(final StepInterpolator interpolator, final boolean isLast)
     throws DerivativeException {
-
-    AbstractStepInterpolator ai = (AbstractStepInterpolator) interpolator;
 
     if (steps.size() == 0) {
       initialTime = interpolator.getPreviousTime();
       forward     = interpolator.isForward();
     }
 
-    steps.add(ai.copy());
+    steps.add(interpolator.copy());
 
     if (isLast) {
-      finalTime = ai.getCurrentTime();
+      finalTime = interpolator.getCurrentTime();
       index     = steps.size() - 1;
     }
 
@@ -193,7 +221,7 @@ public class ContinuousOutputModel
   public double getInitialTime() {
     return initialTime;
   }
-    
+
   /**
    * Get the final integration time.
    * @return final integration time
@@ -209,9 +237,9 @@ public class ContinuousOutputModel
    * @return interpolation point time
    */
   public double getInterpolatedTime() {
-    return ((StepInterpolator) steps.get(index)).getInterpolatedTime();
+    return steps.get(index).getInterpolatedTime();
   }
-    
+
   /** Set the time of the interpolated point.
    * <p>This method should <strong>not</strong> be called before the
    * integration is over because some internal variables are set only
@@ -224,16 +252,15 @@ public class ContinuousOutputModel
    * near the interval endpoints.</p>
    * @param time time of the interpolated point
    */
-  public void setInterpolatedTime(double time) {
+  public void setInterpolatedTime(final double time) {
 
-    try {
       // initialize the search with the complete steps table
       int iMin = 0;
-      StepInterpolator sMin = (StepInterpolator) steps.get(iMin);
+      final StepInterpolator sMin = steps.get(iMin);
       double tMin = 0.5 * (sMin.getPreviousTime() + sMin.getCurrentTime());
 
       int iMax = steps.size() - 1;
-      StepInterpolator sMax = (StepInterpolator) steps.get(iMax);
+      final StepInterpolator sMax = steps.get(iMax);
       double tMax = 0.5 * (sMax.getPreviousTime() + sMax.getCurrentTime());
 
       // handle points outside of the integration interval
@@ -253,8 +280,8 @@ public class ContinuousOutputModel
       while (iMax - iMin > 5) {
 
         // use the last estimated index as the splitting index
-        StepInterpolator si = (StepInterpolator) steps.get(index);
-        int location = locatePoint(time, si);
+        final StepInterpolator si = steps.get(index);
+        final int location = locatePoint(time, si);
         if (location < 0) {
           iMax = index;
           tMax = 0.5 * (si.getPreviousTime() + si.getCurrentTime());
@@ -268,33 +295,33 @@ public class ContinuousOutputModel
         }
 
         // compute a new estimate of the index in the reduced table slice
-        int iMed = (iMin + iMax) / 2;
-        StepInterpolator sMed = (StepInterpolator) steps.get(iMed);
-        double tMed = 0.5 * (sMed.getPreviousTime() + sMed.getCurrentTime());
+        final int iMed = (iMin + iMax) / 2;
+        final StepInterpolator sMed = steps.get(iMed);
+        final double tMed = 0.5 * (sMed.getPreviousTime() + sMed.getCurrentTime());
 
-        if ((Math.abs(tMed - tMin) < 1e-6) || (Math.abs(tMax - tMed) < 1e-6)) {
+        if ((FastMath.abs(tMed - tMin) < 1e-6) || (FastMath.abs(tMax - tMed) < 1e-6)) {
           // too close to the bounds, we estimate using a simple dichotomy
           index = iMed;
         } else {
           // estimate the index using a reverse quadratic polynom
           // (reverse means we have i = P(t), thus allowing to simply
           // compute index = P(time) rather than solving a quadratic equation)
-          double d12 = tMax - tMed;
-          double d23 = tMed - tMin;
-          double d13 = tMax - tMin;
-          double dt1 = time - tMax;
-          double dt2 = time - tMed;
-          double dt3 = time - tMin;
-          double iLagrange = ((dt2 * dt3 * d23) * iMax -
-                              (dt1 * dt3 * d13) * iMed +
-                              (dt1 * dt2 * d12) * iMin) /
-                             (d12 * d23 * d13);
-          index = (int) Math.rint(iLagrange);
+          final double d12 = tMax - tMed;
+          final double d23 = tMed - tMin;
+          final double d13 = tMax - tMin;
+          final double dt1 = time - tMax;
+          final double dt2 = time - tMed;
+          final double dt3 = time - tMin;
+          final double iLagrange = ((dt2 * dt3 * d23) * iMax -
+                                    (dt1 * dt3 * d13) * iMed +
+                                    (dt1 * dt2 * d12) * iMin) /
+                                   (d12 * d23 * d13);
+          index = (int) FastMath.rint(iLagrange);
         }
 
         // force the next size reduction to be at least one tenth
-        int low  = Math.max(iMin + 1, (9 * iMin + iMax) / 10);
-        int high = Math.min(iMax - 1, (iMin + 9 * iMax) / 10);
+        final int low  = FastMath.max(iMin + 1, (9 * iMin + iMax) / 10);
+        final int high = FastMath.min(iMax - 1, (iMin + 9 * iMax) / 10);
         if (index < low) {
           index = low;
         } else if (index > high) {
@@ -305,38 +332,32 @@ public class ContinuousOutputModel
 
       // now the table slice is very small, we perform an iterative search
       index = iMin;
-      while ((index <= iMax) &&
-             (locatePoint(time, (StepInterpolator) steps.get(index)) > 0)) {
+      while ((index <= iMax) && (locatePoint(time, steps.get(index)) > 0)) {
         ++index;
       }
 
-      StepInterpolator si = (StepInterpolator) steps.get(index);
-
-      si.setInterpolatedTime(time);
-
-    } catch (DerivativeException de) {
-      throw new RuntimeException("unexpected DerivativeException caught: " +
-                                 de.getMessage());
-    }
+      steps.get(index).setInterpolatedTime(time);
 
   }
 
   /**
    * Get the state vector of the interpolated point.
    * @return state vector at time {@link #getInterpolatedTime}
+   * @exception DerivativeException if user code called from step interpolator
+   * finalization triggers one
    */
-  public double[] getInterpolatedState() {
-    return ((StepInterpolator) steps.get(index)).getInterpolatedState();
+  public double[] getInterpolatedState() throws DerivativeException {
+    return steps.get(index).getInterpolatedState();
   }
 
-  /** Compare a step interval and a double. 
+  /** Compare a step interval and a double.
    * @param time point to locate
    * @param interval step interval
    * @return -1 if the double is before the interval, 0 if it is in
    * the interval, and +1 if it is after the interval, according to
    * the interval direction
    */
-  private int locatePoint(double time, StepInterpolator interval) {
+  private int locatePoint(final double time, final StepInterpolator interval) {
     if (forward) {
       if (time < interval.getPreviousTime()) {
         return -1;
@@ -354,23 +375,5 @@ public class ContinuousOutputModel
       return 0;
     }
   }
-
-  /** Initial integration time. */
-  private double initialTime;
-
-  /** Final integration time. */
-  private double finalTime;
-
-  /** Integration direction indicator. */
-  private boolean forward;
-
-  /** Current interpolator index. */
-  private int index;
-
-  /** Steps table. */
-  private ArrayList steps;
-
-  /** Serializable version identifier */
-  private static final long serialVersionUID = 2259286184268533249L;
 
 }

@@ -19,41 +19,42 @@ package org.apache.commons.math.stat.descriptive.summary;
 import java.io.Serializable;
 
 import org.apache.commons.math.stat.descriptive.AbstractStorelessUnivariateStatistic;
+import org.apache.commons.math.util.FastMath;
 
 /**
- * Returns the sum of the natural logs for this collection of values.  
+ * Returns the sum of the natural logs for this collection of values.
  * <p>
  * Uses {@link java.lang.Math#log(double)} to compute the logs.  Therefore,
  * <ul>
  * <li>If any of values are < 0, the result is <code>NaN.</code></li>
- * <li>If all values are non-negative and less than 
+ * <li>If all values are non-negative and less than
  * <code>Double.POSITIVE_INFINITY</code>,  but at least one value is 0, the
  * result is <code>Double.NEGATIVE_INFINITY.</code></li>
- * <li>If both <code>Double.POSITIVE_INFINITY</code> and 
+ * <li>If both <code>Double.POSITIVE_INFINITY</code> and
  * <code>Double.NEGATIVE_INFINITY</code> are among the values, the result is
  * <code>NaN.</code></li>
  * </ul></p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally.</p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 1006299 $ $Date: 2010-10-10 16:47:17 +0200 (dim. 10 oct. 2010) $
  */
 public class SumOfLogs extends AbstractStorelessUnivariateStatistic implements Serializable {
 
     /** Serializable version identifier */
-    private static final long serialVersionUID = -370076995648386763L;    
+    private static final long serialVersionUID = -370076995648386763L;
 
     /**Number of values that have been added */
     private int n;
-    
+
     /**
      * The currently running value
      */
     private double value;
-    
+
     /**
      * Create a SumOfLogs instance
      */
@@ -63,16 +64,28 @@ public class SumOfLogs extends AbstractStorelessUnivariateStatistic implements S
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code SumOfLogs} identical
+     * to the {@code original}
+     *
+     * @param original the {@code SumOfLogs} instance to copy
      */
+    public SumOfLogs(SumOfLogs original) {
+        copy(original, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void increment(final double d) {
-        value += Math.log(d);
+        value += FastMath.log(d);
         n++;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         if (n > 0) {
             return value;
@@ -82,15 +95,16 @@ public class SumOfLogs extends AbstractStorelessUnivariateStatistic implements S
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getN()
+     * {@inheritDoc}
      */
     public long getN() {
         return n;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         value = 0d;
         n = 0;
@@ -104,23 +118,48 @@ public class SumOfLogs extends AbstractStorelessUnivariateStatistic implements S
      * Throws <code>IllegalArgumentException</code> if the array is null.</p>
      * <p>
      * See {@link SumOfLogs}.</p>
-     * 
+     *
      * @param values the input array
      * @param begin index of the first array element to include
      * @param length the number of elements to include
-     * @return the sum of the natural logs of the values or Double.NaN if 
+     * @return the sum of the natural logs of the values or Double.NaN if
      * length = 0
      * @throws IllegalArgumentException if the array is null or the array index
      *  parameters are not valid
      */
+    @Override
     public double evaluate(final double[] values, final int begin, final int length) {
         double sumLog = Double.NaN;
         if (test(values, begin, length)) {
             sumLog = 0.0;
             for (int i = begin; i < begin + length; i++) {
-                sumLog += Math.log(values[i]);
+                sumLog += FastMath.log(values[i]);
             }
         }
         return sumLog;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SumOfLogs copy() {
+        SumOfLogs result = new SumOfLogs();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source SumOfLogs to copy
+     * @param dest SumOfLogs to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(SumOfLogs source, SumOfLogs dest) {
+        dest.setData(source.getDataRef());
+        dest.n = source.n;
+        dest.value = source.value;
     }
 }

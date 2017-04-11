@@ -20,11 +20,11 @@ import java.io.Serializable;
 
 /**
  * Computes a statistic related to the Fourth Central Moment.  Specifically,
- * what is computed is the sum of 
+ * what is computed is the sum of
  * <p>
  * (x_i - xbar) ^ 4, </p>
  * <p>
- * where the x_i are the 
+ * where the x_i are the
  * sample observations and xbar is the sample mean. </p>
  * <p>
  * The following recursive updating formula is used: </p>
@@ -43,18 +43,18 @@ import java.io.Serializable;
  * Returns <code>Double.NaN</code> if no data values have been added and
  * returns <code>0</code> if there is just one value in the data set. </p>
  * <p>
- * <strong>Note that this implementation is not synchronized.</strong> If 
+ * <strong>Note that this implementation is not synchronized.</strong> If
  * multiple threads access an instance of this class concurrently, and at least
- * one of the threads invokes the <code>increment()</code> or 
+ * one of the threads invokes the <code>increment()</code> or
  * <code>clear()</code> method, it must be synchronized externally. </p>
- * 
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ *
+ * @version $Revision: 811685 $ $Date: 2009-09-05 19:36:48 +0200 (sam. 05 sept. 2009) $
  */
 public class FourthMoment extends ThirdMoment implements Serializable{
 
     /** Serializable version identifier */
     private static final long serialVersionUID = 4763990447117157611L;
-        
+
     /** fourth moment of values that have been added */
     protected double m4;
 
@@ -65,10 +65,22 @@ public class FourthMoment extends ThirdMoment implements Serializable{
         super();
         m4 = Double.NaN;
     }
-    
+
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#increment(double)
+     * Copy constructor, creates a new {@code FourthMoment} identical
+     * to the {@code original}
+     *
+     * @param original the {@code FourthMoment} instance to copy
      */
+     public FourthMoment(FourthMoment original) {
+         super();
+         copy(original, this);
+     }
+
+    /**
+     * {@inheritDoc}
+     */
+     @Override
     public void increment(final double d) {
         if (n < 1) {
             m4 = 0.0;
@@ -79,28 +91,52 @@ public class FourthMoment extends ThirdMoment implements Serializable{
 
         double prevM3 = m3;
         double prevM2 = m2;
-        
+
         super.increment(d);
-        
-        double n0 = (double) n;
+
+        double n0 = n;
 
         m4 = m4 - 4.0 * nDev * prevM3 + 6.0 * nDevSq * prevM2 +
             ((n0 * n0) - 3 * (n0 -1)) * (nDevSq * nDevSq * (n0 - 1) * n0);
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#getResult()
+     * {@inheritDoc}
      */
+    @Override
     public double getResult() {
         return m4;
     }
 
     /**
-     * @see org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic#clear()
+     * {@inheritDoc}
      */
+    @Override
     public void clear() {
         super.clear();
         m4 = Double.NaN;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public FourthMoment copy() {
+        FourthMoment result = new FourthMoment();
+        copy(this, result);
+        return result;
+    }
+
+    /**
+     * Copies source to dest.
+     * <p>Neither source nor dest can be null.</p>
+     *
+     * @param source FourthMoment to copy
+     * @param dest FourthMoment to copy to
+     * @throws NullPointerException if either source or dest is null
+     */
+    public static void copy(FourthMoment source, FourthMoment dest) {
+        ThirdMoment.copy(source, dest);
+        dest.m4 = source.m4;
+    }
 }

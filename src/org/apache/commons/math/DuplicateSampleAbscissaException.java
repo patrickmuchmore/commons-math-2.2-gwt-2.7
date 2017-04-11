@@ -16,14 +16,16 @@
  */
 package org.apache.commons.math;
 
+import org.apache.commons.math.exception.util.LocalizedFormats;
+
 /**
- * Exeption thrown when a sample contains several entries at the same abscissa.
- * 
+ * Exception thrown when a sample contains several entries at the same abscissa.
+ *
  * @since 1.2
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ * @version $Revision: 983921 $ $Date: 2010-08-10 12:46:06 +0200 (mar. 10 août 2010) $
  */
 public class DuplicateSampleAbscissaException extends MathException  {
-    
+
     /** Serializable version identifier */
     private static final long serialVersionUID = -2271007547170169872L;
 
@@ -34,8 +36,8 @@ public class DuplicateSampleAbscissaException extends MathException  {
      * @param i2 index of another entry having the duplicate abscissa
      */
     public DuplicateSampleAbscissaException(double abscissa, int i1, int i2) {
-        super("Abscissa {0} is duplicated at both indices {1} and {2}",
-              new Object[] { new Double(abscissa), new Integer(i1), new Integer(i2) });
+        super(LocalizedFormats.DUPLICATED_ABSCISSA,
+              abscissa, i1, i2);
     }
 
     /**
@@ -45,5 +47,5 @@ public class DuplicateSampleAbscissaException extends MathException  {
     public double getDuplicateAbscissa() {
         return ((Double) getArguments()[0]).doubleValue();
     }
-    
+
 }

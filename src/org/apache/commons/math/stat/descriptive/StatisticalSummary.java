@@ -19,45 +19,47 @@ package org.apache.commons.math.stat.descriptive;
 /**
  *  Reporting interface for basic univariate statistics.
  *
-  * @version $Revision: 480440 $ $Date: 2006-11-29 00:14:12 -0700 (Wed, 29 Nov 2006) $
+  * @version $Revision: 811786 $ $Date: 2009-09-06 11:36:08 +0200 (dim. 06 sept. 2009) $
  */
 public interface StatisticalSummary {
-    /** 
+
+    /**
      * Returns the <a href="http://www.xycoon.com/arithmetic_mean.htm">
-     * arithmetic mean </a> of the available values 
+     * arithmetic mean </a> of the available values
      * @return The mean or Double.NaN if no values have been added.
      */
-    public abstract double getMean();
-    /** 
+    double getMean();
+    /**
      * Returns the variance of the available values.
-     * @return The variance, Double.NaN if no values have been added 
-     * or 0.0 for a single value set.  
+     * @return The variance, Double.NaN if no values have been added
+     * or 0.0 for a single value set.
      */
-    public abstract double getVariance();
-    /** 
+    double getVariance();
+    /**
      * Returns the standard deviation of the available values.
-     * @return The standard deviation, Double.NaN if no values have been added 
-     * or 0.0 for a single value set. 
+     * @return The standard deviation, Double.NaN if no values have been added
+     * or 0.0 for a single value set.
      */
-    public abstract double getStandardDeviation();
-    /** 
+    double getStandardDeviation();
+    /**
      * Returns the maximum of the available values
      * @return The max or Double.NaN if no values have been added.
      */
-    public abstract double getMax();
-    /** 
+    double getMax();
+    /**
     * Returns the minimum of the available values
     * @return The min or Double.NaN if no values have been added.
     */
-    public abstract double getMin();
-    /** 
+    double getMin();
+    /**
      * Returns the number of available values
      * @return The number of available values
      */
-    public abstract long getN();
+    long getN();
     /**
      * Returns the sum of the values that have been added to Univariate.
      * @return The sum or Double.NaN if no values have been added
      */
-    public abstract double getSum();
+    double getSum();
+
 }

@@ -26,9 +26,12 @@ import java.math.BigDecimal;
  * Matrix element indexing is 0-based -- e.g., <code>getEntry(0, 0)</code>
  * returns the element in the first row, first column of the matrix.</p>
  *
- * @version $Revision: 617953 $ $Date: 2008-02-02 22:54:00 -0700 (Sat, 02 Feb 2008) $
+ * @version $Revision: 811786 $ $Date: 2009-09-06 11:36:08 +0200 (dim. 06 sept. 2009) $
+ * @deprecated as of 2.0, replaced by {@link FieldMatrix} with a {@link
+ * org.apache.commons.math.util.BigReal} parameter
  */
-public interface BigMatrix {
+@Deprecated
+public interface BigMatrix extends AnyMatrix {
 
     /**
      * Returns a (deep) copy of this.
@@ -36,7 +39,7 @@ public interface BigMatrix {
      * @return matrix copy
      */
     BigMatrix copy();
-    
+
     /**
      * Compute the sum of this and m.
      *
@@ -45,7 +48,7 @@ public interface BigMatrix {
      * @exception  IllegalArgumentException if m is not the same size as this
      */
     BigMatrix add(BigMatrix m) throws IllegalArgumentException;
-    
+
     /**
      * Compute this minus m.
      *
@@ -54,7 +57,7 @@ public interface BigMatrix {
      * @exception  IllegalArgumentException if m is not the same size as this
      */
     BigMatrix subtract(BigMatrix m) throws IllegalArgumentException;
-    
+
      /**
      * Returns the result of adding d to each entry of this.
      *
@@ -62,7 +65,7 @@ public interface BigMatrix {
      * @return     d + this
      */
     BigMatrix scalarAdd(BigDecimal d);
-    
+
     /**
      * Returns the result multiplying each entry of this by d.
      *
@@ -70,17 +73,17 @@ public interface BigMatrix {
      * @return     d * this
      */
     BigMatrix scalarMultiply(BigDecimal d);
-    
+
     /**
      * Returns the result of postmultiplying this by m.
      *
      * @param m    matrix to postmultiply by
      * @return     this * m
-     * @throws     IllegalArgumentException 
+     * @throws     IllegalArgumentException
      *             if columnDimension(this) != rowDimension(m)
      */
     BigMatrix multiply(BigMatrix m) throws IllegalArgumentException;
-    
+
     /**
      * Returns the result premultiplying this by <code>m</code>.
      * @param m    matrix to premultiply by
@@ -88,8 +91,8 @@ public interface BigMatrix {
      * @throws     IllegalArgumentException
      *             if rowDimension(this) != columnDimension(m)
      */
-    public BigMatrix preMultiply(BigMatrix m) throws IllegalArgumentException;
-    
+    BigMatrix preMultiply(BigMatrix m) throws IllegalArgumentException;
+
     /**
      * Returns matrix entries as a two-dimensional array.
      *
@@ -117,7 +120,7 @@ public interface BigMatrix {
      * @return norm
      */
     BigDecimal getNorm();
-    
+
     /**
      * Gets a submatrix. Rows and columns are indicated
      * counting from 0 to n-1.
@@ -132,7 +135,7 @@ public interface BigMatrix {
      */
     BigMatrix getSubMatrix(int startRow, int endRow, int startColumn,
             int endColumn) throws MatrixIndexException;
-    
+
     /**
      * Gets a submatrix. Rows and columns are indicated
      * counting from 0 to n-1.
@@ -145,7 +148,7 @@ public interface BigMatrix {
      */
     BigMatrix getSubMatrix(int[] selectedRows, int[] selectedColumns)
     throws MatrixIndexException;
-    
+
     /**
      * Returns the entries in row number <code>row</code>
      * as a row matrix.  Row indices start at 0.
@@ -155,7 +158,7 @@ public interface BigMatrix {
      * @throws MatrixIndexException if the specified row index is invalid
      */
     BigMatrix getRowMatrix(int row) throws MatrixIndexException;
-    
+
     /**
      * Returns the entries in column number <code>column</code>
      * as a column matrix.  Column indices start at 0.
@@ -165,7 +168,7 @@ public interface BigMatrix {
      * @throws MatrixIndexException if the specified column index is invalid
      */
     BigMatrix getColumnMatrix(int column) throws MatrixIndexException;
-    
+
     /**
      * Returns the entries in row number <code>row</code> as an array.
      * <p>
@@ -219,24 +222,24 @@ public interface BigMatrix {
     /**
      * Returns the entry in the specified row and column.
      * <p>
-     * Row and column indices start at 0 and must satisfy 
+     * Row and column indices start at 0 and must satisfy
      * <ul>
      * <li><code>0 <= row < rowDimension</code></li>
      * <li><code> 0 <= column < columnDimension</code></li>
      * </ul>
      * otherwise a <code>MatrixIndexException</code> is thrown.</p>
      *
-     * @param row  row location of entry to be fetched  
+     * @param row  row location of entry to be fetched
      * @param column  column location of entry to be fetched
      * @return matrix entry in row,column
      * @throws MatrixIndexException if the row or column index is not valid
      */
     BigDecimal getEntry(int row, int column) throws MatrixIndexException;
-    
+
     /**
      * Returns the entry in the specified row and column as a double.
      * <p>
-     * Row and column indices start at 0 and must satisfy 
+     * Row and column indices start at 0 and must satisfy
      * <ul>
      * <li><code>0 <= row < rowDimension</code></li>
      * <li><code> 0 <= column < columnDimension</code></li>
@@ -256,51 +259,25 @@ public interface BigMatrix {
      * @return transpose matrix
      */
     BigMatrix transpose();
-    
+
     /**
      * Returns the inverse of this matrix.
      *
      * @return inverse matrix
-     * @throws org.apache.commons.math.linear.InvalidMatrixException if 
+     * @throws org.apache.commons.math.linear.InvalidMatrixException if
      *     this is not invertible
      */
     BigMatrix inverse() throws InvalidMatrixException;
-    
+
     /**
      * Returns the determinant of this matrix.
      *
      * @return determinant
-      *@throws org.apache.commons.math.linear.InvalidMatrixException if 
+      *@throws org.apache.commons.math.linear.InvalidMatrixException if
       *    matrix is not square
      */
     BigDecimal getDeterminant() throws InvalidMatrixException;
-    
-    /**
-     * Is this a square matrix?
-     * @return true if the matrix is square (rowDimension = columnDimension)
-     */
-    boolean isSquare();
-    
-    /**
-     * Is this a singular matrix?
-     * @return true if the matrix is singular
-     */
-    boolean isSingular();
-    
-    /**
-     * Returns the number of rows in the matrix.
-     *
-     * @return rowDimension
-     */
-    int getRowDimension();
-    
-    /**
-     * Returns the number of columns in the matrix.
-     *
-     * @return columnDimension
-     */
-    int getColumnDimension();
-    
+
     /**
      * Returns the <a href="http://mathworld.wolfram.com/MatrixTrace.html">
      * trace</a> of the matrix (the sum of the elements on the main diagonal).
@@ -308,7 +285,7 @@ public interface BigMatrix {
      * @return trace
      */
     BigDecimal getTrace();
-    
+
     /**
      * Returns the result of multiplying this by the vector <code>v</code>.
      *
@@ -326,14 +303,14 @@ public interface BigMatrix {
      * @throws IllegalArgumentException if rowDimension != v.size()
      */
     BigDecimal[] preMultiply(BigDecimal[] v) throws IllegalArgumentException;
-    
+
     /**
      * Returns the solution vector for a linear system with coefficient
      * matrix = this and constant vector = <code>b</code>.
      *
      * @param b  constant vector
      * @return vector of solution values to AX = b, where A is *this
-     * @throws IllegalArgumentException if this.rowDimension != b.length 
+     * @throws IllegalArgumentException if this.rowDimension != b.length
      * @throws org.apache.commons.math.linear.InvalidMatrixException if this matrix is not square or is singular
      */
     BigDecimal[] solve(BigDecimal[] b) throws IllegalArgumentException, InvalidMatrixException;
@@ -341,7 +318,7 @@ public interface BigMatrix {
     /**
      * Returns a matrix of (column) solution vectors for linear systems with
      * coefficient matrix = this and constant vectors = columns of
-     * <code>b</code>. 
+     * <code>b</code>.
      *
      * @param b  matrix of constant vectors forming RHS of linear systems to
      * to solve

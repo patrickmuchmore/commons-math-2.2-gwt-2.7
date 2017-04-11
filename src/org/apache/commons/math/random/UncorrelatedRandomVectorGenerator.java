@@ -19,19 +19,28 @@ package org.apache.commons.math.random;
 
 import java.util.Arrays;
 
-import org.apache.commons.math.ArrayUtil;
+import org.apache.commons.math.exception.DimensionMismatchException;
 
-/** 
+/**
  * A {@link RandomVectorGenerator} that generates vectors with uncorrelated
  * components. Components of generated vectors follow (independent) Gaussian
  * distributions, with parameters supplied in the constructor.
- * 
- * @version $Revision: 620312 $ $Date: 2008-02-10 12:28:59 -0700 (Sun, 10 Feb 2008) $
+ *
+ * @version $Revision: 962515 $ $Date: 2010-07-09 15:15:28 +0200 (ven. 09 juil. 2010) $
  * @since 1.2
  */
 
 public class UncorrelatedRandomVectorGenerator
   implements RandomVectorGenerator {
+
+    /** Underlying scalar generator. */
+    private final NormalizedRandomGenerator generator;
+
+    /** Mean vector. */
+    private final double[] mean;
+
+    /** Standard deviation vector. */
+    private final double[] standardDeviation;
 
   /** Simple constructor.
    * <p>Build an uncorrelated random vector generator from
@@ -45,12 +54,10 @@ public class UncorrelatedRandomVectorGenerator
                                            double[] standardDeviation,
                                            NormalizedRandomGenerator generator) {
     if (mean.length != standardDeviation.length) {
-      throw new IllegalArgumentException("dimension mismatch");
+        throw new DimensionMismatchException(mean.length, standardDeviation.length);
     }
-//  this.mean              = (double[]) mean.clone();
-//  this.standardDeviation = (double[]) standardDeviation.clone();
-    this.mean = ArrayUtil.cloneDouble(mean);
-    this.standardDeviation = ArrayUtil.cloneDouble(standardDeviation);
+    this.mean              = mean.clone();
+    this.standardDeviation = standardDeviation.clone();
     this.generator = generator;
   }
 
@@ -74,7 +81,7 @@ public class UncorrelatedRandomVectorGenerator
    */
   public double[] nextVector() {
 
-    double[] random = new double[mean.length]; 
+    double[] random = new double[mean.length];
     for (int i = 0; i < random.length; ++i) {
       random[i] = mean[i] + standardDeviation[i] * generator.nextNormalizedDouble();
     }
@@ -82,14 +89,5 @@ public class UncorrelatedRandomVectorGenerator
     return random;
 
   }
-
-  /** Mean vector. */
-  private double[] mean;
-
-  /** Standard deviation vector. */
-  private double[] standardDeviation;
-
-  /** Underlying scalar generator. */
-  private NormalizedRandomGenerator generator;
 
 }
