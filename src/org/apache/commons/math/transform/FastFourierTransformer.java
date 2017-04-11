@@ -727,7 +727,7 @@ public class FastFourierTransformer implements Serializable {
         }
 
         /** {@inheritDoc} */
-        @Override
+//      @Override
         public Object clone() {
             MultiDimensionalComplexMatrix mdcm =
                     new MultiDimensionalComplexMatrix(Array.newInstance(

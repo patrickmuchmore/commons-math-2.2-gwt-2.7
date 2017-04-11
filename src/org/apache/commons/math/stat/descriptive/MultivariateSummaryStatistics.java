@@ -306,7 +306,7 @@ public class MultivariateSummaryStatistics
     @Override
     public String toString() {
         final String separator = ", ";
-        final String suffix = System.getProperty("line.separator");
+        final String suffix = "\n"; // TODO System.getProperty("line.separator");
         StringBuilder outBuffer = new StringBuilder();
         outBuffer.append("MultivariateSummaryStatistics:" + suffix);
         outBuffer.append("n: " + getN() + suffix);

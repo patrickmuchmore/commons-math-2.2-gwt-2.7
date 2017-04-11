@@ -1,8 +1,8 @@
 package org.feno.estimate.client.model;
 
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.SplineInterpolator;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
+import org.apache.commons.math.analysis.interpolation.LinearInterpolator;
 import org.feno.estimate.client.mcmc.TestData;
 
 public class TwoCompartment extends Model {
@@ -43,7 +43,7 @@ public class TwoCompartment extends Model {
 	@Override
 	public double logLikelihood() {
 		double logLikelihood = 0;
-		UnivariateRealFunction vDotInterpolator = new SplineInterpolator().interpolate(vDot, vDotSd);
+		UnivariateRealFunction vDotInterpolator = new LinearInterpolator().interpolate(vDot, vDotSd);
 		for (int i = 0; i < TestData.simulated.length; i++) {
 			try {
 				logLikelihood += normalLogDensity(TestData.simulated[i][1], fenoEstimate(TestData.simulated[i][0]),

@@ -394,24 +394,28 @@ public class DescriptiveStatistics implements StatisticalSummary, Serializable {
     public double getPercentile(double p) {
         if (percentileImpl instanceof Percentile) {
             ((Percentile) percentileImpl).setQuantile(p);
+            return apply(percentileImpl);
         } else {
-            try {
-                percentileImpl.getClass().getMethod(SET_QUANTILE_METHOD_NAME,
-                        new Class[] {Double.TYPE}).invoke(percentileImpl,
-                                new Object[] {Double.valueOf(p)});
-            } catch (NoSuchMethodException e1) { // Setter guard should prevent
-                throw MathRuntimeException.createIllegalArgumentException(
-                      LocalizedFormats.PERCENTILE_IMPLEMENTATION_UNSUPPORTED_METHOD,
-                      percentileImpl.getClass().getName(), SET_QUANTILE_METHOD_NAME);
-            } catch (IllegalAccessException e2) {
-                throw MathRuntimeException.createIllegalArgumentException(
-                      LocalizedFormats.PERCENTILE_IMPLEMENTATION_CANNOT_ACCESS_METHOD,
-                      SET_QUANTILE_METHOD_NAME, percentileImpl.getClass().getName());
-            } catch (InvocationTargetException e3) {
-                throw MathRuntimeException.createIllegalArgumentException(e3.getCause());
-            }
+            throw MathRuntimeException.createIllegalArgumentException(
+                    LocalizedFormats.PERCENTILE_IMPLEMENTATION_UNSUPPORTED_METHOD,
+                    percentileImpl.getClass().getName(), SET_QUANTILE_METHOD_NAME);
+//            try {
+//                percentileImpl.getClass().getMethod(SET_QUANTILE_METHOD_NAME,
+//                        new Class[] {Double.TYPE}).invoke(percentileImpl,
+//                                new Object[] {Double.valueOf(p)});
+//            } catch (NoSuchMethodException e1) { // Setter guard should prevent
+//                throw MathRuntimeException.createIllegalArgumentException(
+//                      LocalizedFormats.PERCENTILE_IMPLEMENTATION_UNSUPPORTED_METHOD,
+//                      percentileImpl.getClass().getName(), SET_QUANTILE_METHOD_NAME);
+//            } catch (IllegalAccessException e2) {
+//                throw MathRuntimeException.createIllegalArgumentException(
+//                      LocalizedFormats.PERCENTILE_IMPLEMENTATION_CANNOT_ACCESS_METHOD,
+//                      SET_QUANTILE_METHOD_NAME, percentileImpl.getClass().getName());
+//            } catch (InvocationTargetException e3) {
+//                throw MathRuntimeException.createIllegalArgumentException(e3.getCause());
+//            }
         }
-        return apply(percentileImpl);
+//        return apply(percentileImpl);
     }
 
     /**
@@ -578,22 +582,25 @@ public class DescriptiveStatistics implements StatisticalSummary, Serializable {
      */
     public synchronized void setPercentileImpl(
             UnivariateStatistic percentileImpl) {
-        try {
-            percentileImpl.getClass().getMethod(SET_QUANTILE_METHOD_NAME,
-                    new Class[] {Double.TYPE}).invoke(percentileImpl,
-                            new Object[] {Double.valueOf(50.0d)});
-        } catch (NoSuchMethodException e1) {
-            throw MathRuntimeException.createIllegalArgumentException(
-                  LocalizedFormats.PERCENTILE_IMPLEMENTATION_UNSUPPORTED_METHOD,
-                  percentileImpl.getClass().getName(), SET_QUANTILE_METHOD_NAME);
-        } catch (IllegalAccessException e2) {
-            throw MathRuntimeException.createIllegalArgumentException(
-                  LocalizedFormats.PERCENTILE_IMPLEMENTATION_CANNOT_ACCESS_METHOD,
-                  SET_QUANTILE_METHOD_NAME, percentileImpl.getClass().getName());
-        } catch (InvocationTargetException e3) {
-            throw MathRuntimeException.createIllegalArgumentException(e3.getCause());
-        }
-        this.percentileImpl = percentileImpl;
+    	this.percentileImpl = percentileImpl;
+    	// TODO Verify setQuantile(double) method exists.
+//    	if this.percentileImpl.getClass().
+//        try {
+//            percentileImpl.getClass().getMethod(SET_QUANTILE_METHOD_NAME,
+//                    new Class[] {Double.TYPE}).invoke(percentileImpl,
+//                            new Object[] {Double.valueOf(50.0d)});
+//        } catch (NoSuchMethodException e1) {
+//            throw MathRuntimeException.createIllegalArgumentException(
+//                  LocalizedFormats.PERCENTILE_IMPLEMENTATION_UNSUPPORTED_METHOD,
+//                  percentileImpl.getClass().getName(), SET_QUANTILE_METHOD_NAME);
+//        } catch (IllegalAccessException e2) {
+//            throw MathRuntimeException.createIllegalArgumentException(
+//                  LocalizedFormats.PERCENTILE_IMPLEMENTATION_CANNOT_ACCESS_METHOD,
+//                  SET_QUANTILE_METHOD_NAME, percentileImpl.getClass().getName());
+//        } catch (InvocationTargetException e3) {
+//            throw MathRuntimeException.createIllegalArgumentException(e3.getCause());
+//        }
+//        this.percentileImpl = percentileImpl;
     }
 
     /**
