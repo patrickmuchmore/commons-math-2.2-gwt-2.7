@@ -20,10 +20,10 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  <inherits name="jdistlib.JDistLib"/>
+  <!-- <inherits name="jdistlib.JDistLib"/>                       -->
   <inherits name="com.googlecode.gwt.charts.Charts"/>
   <inherits name="org.apache.commons.math.Math"/>
-  <inherits name='com.googlecode.gflot.GFlot'/>
+  <!-- <inherits name='com.googlecode.gflot.GFlot'/>              -->
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.feno.estimate.client.ui.Launch'/>

@@ -4,7 +4,7 @@
   <property name="gwt.args" value="" />
 
   <!-- Configure path to GWT SDK -->
-  <property name="gwt.sdk" location="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom" />
+  <property name="gwt.sdk" location="lib" />
 
   <path id="project.class.path">
     <pathelement location="war/WEB-INF/classes"/>
@@ -14,7 +14,8 @@
     <pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar"/>
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
     <!-- Add any additional non-server libs (such as JUnit) here -->
-  	<pathelement location="${basedir}/lib/gwt-charts-0.9.10.jar"/>
+  	<pathelement location="${gwt.sdk}/gwt-charts-0.9.10.jar"/>
+    <pathelement location="${gwt.sdk}/junit4_11_0.jar"/>
   </path>
 
   <target name="libs" description="Copy libs to WEB-INF/lib">
@@ -66,6 +67,8 @@
       <arg line="-war"/>
       <arg value="war"/>
       <!-- Additional arguments like -logLevel DEBUG or -nosuperDevMode -->
+      <arg line="-logLevel"/>
+      <arg value="TRACE"/>
       <arg line="${gwt.args}"/>
       <arg value="org.feno.estimate.Launch"/>
     </java>
@@ -76,7 +79,6 @@
       source="1.7" target="1.7" nowarn="true"
       destdir="war/WEB-INF/classes"
       debug="true" debuglevel="lines,vars,source">
-      <classpath location="/home/muchmore/statet/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -90,9 +92,6 @@
         <pathelement location="src" />
         <pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA-sources.jar" />
-        <pathelement location="/home/muchmore/statet/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar" />
       </classpath>
       <batchtest todir="reports/htmlunit.dev" >
         <fileset dir="test" >
@@ -113,9 +112,6 @@
         <pathelement location="src" />
         <pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/home/muchmore/class/feno/git/gwt/build/staging/gwt-2.7.0-FeNOCustom/validation-api-1.0.0.GA-sources.jar" />
-        <pathelement location="/home/muchmore/statet/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar" />
       </classpath>
       <batchtest todir="reports/htmlunit.prod" >
         <fileset dir="test" >

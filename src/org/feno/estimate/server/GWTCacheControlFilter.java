@@ -20,40 +20,37 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GWTCacheControlFilter implements Filter {
 
- public void destroy() {
- }
+	public void destroy() {
+	}
 
- public void init(FilterConfig config) throws ServletException {
- }
+	public void init(FilterConfig config) throws ServletException {
+	}
 
- public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
-   ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+			throws IOException, ServletException {
 
-   //HttpServletRequest httpRequest = (HttpServletRequest) request;
-   //String requestURI = httpRequest.getRequestURI();
-   
-   /*
-    * The web.xml <filter-mapping> is limited
-    * to the url patterns below, so any file
-    * request pattern sent through this method
-    * should automatically have the no-cache
-    * header set.
-    * 
-    * <url-pattern>*.nocache.js</url-pattern>
-    * <url-pattern>*.nocache.html</url-pattern>
-    * <url-pattern>*.gwt.rpc</url-pattern>
-    */
-   //if (requestURI.contains(".nocache.")) {
-   Date now = new Date();
-   HttpServletResponse httpResponse = (HttpServletResponse) response;
-   httpResponse.setDateHeader("Date", now.getTime());
-   // one day old
-   httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
-   httpResponse.setHeader("Pragma", "no-cache");
-   httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
-   //}
+		// HttpServletRequest httpRequest = (HttpServletRequest) request;
+		// String requestURI = httpRequest.getRequestURI();
 
-  filterChain.doFilter(request, response);
- }
+		/*
+		 * The web.xml <filter-mapping> is limited to the url patterns below, so
+		 * any file request pattern sent through this method should
+		 * automatically have the no-cache header set.
+		 * 
+		 * <url-pattern>*.nocache.js</url-pattern>
+		 * <url-pattern>*.nocache.html</url-pattern>
+		 * <url-pattern>*.gwt.rpc</url-pattern>
+		 */
+		// if (requestURI.contains(".nocache.")) {
+		Date now = new Date();
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		httpResponse.setDateHeader("Date", now.getTime());
+		// one day old
+		httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
+		httpResponse.setHeader("Pragma", "no-cache");
+		httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+		// }
+
+		filterChain.doFilter(request, response);
+	}
 }
-
