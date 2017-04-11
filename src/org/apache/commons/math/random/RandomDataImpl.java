@@ -18,10 +18,10 @@
 package org.apache.commons.math.random;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
+//import java.security.NoSuchProviderException;
+//import java.security.SecureRandom;
 import java.util.Collection;
 
 import org.apache.commons.math.MathException;
@@ -110,8 +110,8 @@ public class RandomDataImpl implements RandomData, Serializable {
     /** underlying random number generator */
     private RandomGenerator rand = null;
 
-    /** underlying secure random number generator */
-    private SecureRandom secRand = null;
+//    /** underlying secure random number generator */
+//    private SecureRandom secRand = null;
 
     /**
      * Construct a RandomDataImpl.
@@ -225,117 +225,117 @@ public class RandomDataImpl implements RandomData, Serializable {
         return (long) ((r * upper) + ((1.0 - r) * lower) + r);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * <strong>Algorithm Description:</strong> hex strings are generated in
-     * 40-byte segments using a 3-step process.
-     * <ol>
-     * <li>
-     * 20 random bytes are generated using the underlying
-     * <code>SecureRandom</code>.</li>
-     * <li>
-     * SHA-1 hash is applied to yield a 20-byte binary digest.</li>
-     * <li>
-     * Each byte of the binary digest is converted to 2 hex digits.</li>
-     * </ol>
-     * </p>
-     *
-     * @param len
-     *            the length of the generated string
-     * @return the random string
-     * @throws NotStrictlyPositiveException if {@code len <= 0}.
-     */
-    public String nextSecureHexString(int len) {
-        if (len <= 0) {
-            throw new NotStrictlyPositiveException(LocalizedFormats.LENGTH, len);
-        }
+//    /**
+//     * {@inheritDoc}
+//     * <p>
+//     * <strong>Algorithm Description:</strong> hex strings are generated in
+//     * 40-byte segments using a 3-step process.
+//     * <ol>
+//     * <li>
+//     * 20 random bytes are generated using the underlying
+//     * <code>SecureRandom</code>.</li>
+//     * <li>
+//     * SHA-1 hash is applied to yield a 20-byte binary digest.</li>
+//     * <li>
+//     * Each byte of the binary digest is converted to 2 hex digits.</li>
+//     * </ol>
+//     * </p>
+//     *
+//     * @param len
+//     *            the length of the generated string
+//     * @return the random string
+//     * @throws NotStrictlyPositiveException if {@code len <= 0}.
+//     */
+//    public String nextSecureHexString(int len) {
+//        if (len <= 0) {
+//            throw new NotStrictlyPositiveException(LocalizedFormats.LENGTH, len);
+//        }
+//
+//        // Get SecureRandom and setup Digest provider
+//        SecureRandom secRan = getSecRan();
+//        MessageDigest alg = null;
+//        try {
+//            alg = MessageDigest.getInstance("SHA-1");
+//        } catch (NoSuchAlgorithmException ex) {
+//            // this should never happen
+//            throw new MathInternalError(ex);
+//        }
+//        alg.reset();
+//
+//        // Compute number of iterations required (40 bytes each)
+//        int numIter = (len / 40) + 1;
+//
+//        StringBuilder outBuffer = new StringBuilder();
+//        for (int iter = 1; iter < numIter + 1; iter++) {
+//            byte[] randomBytes = new byte[40];
+//            secRan.nextBytes(randomBytes);
+//            alg.update(randomBytes);
+//
+//            // Compute hash -- will create 20-byte binary hash
+//            byte hash[] = alg.digest();
+//
+//            // Loop over the hash, converting each byte to 2 hex digits
+//            for (int i = 0; i < hash.length; i++) {
+//                Integer c = Integer.valueOf(hash[i]);
+//
+//                /*
+//                 * Add 128 to byte value to make interval 0-255 This guarantees
+//                 * <= 2 hex digits from toHexString() toHexString would
+//                 * otherwise add 2^32 to negative arguments
+//                 */
+//                String hex = Integer.toHexString(c.intValue() + 128);
+//
+//                // Keep strings uniform length -- guarantees 40 bytes
+//                if (hex.length() == 1) {
+//                    hex = "0" + hex;
+//                }
+//                outBuffer.append(hex);
+//            }
+//        }
+//        return outBuffer.toString().substring(0, len);
+//    }
 
-        // Get SecureRandom and setup Digest provider
-        SecureRandom secRan = getSecRan();
-        MessageDigest alg = null;
-        try {
-            alg = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException ex) {
-            // this should never happen
-            throw new MathInternalError(ex);
-        }
-        alg.reset();
+//    /**
+//     * Generate a random int value uniformly distributed between
+//     * <code>lower</code> and <code>upper</code>, inclusive. This algorithm uses
+//     * a secure random number generator.
+//     *
+//     * @param lower
+//     *            the lower bound.
+//     * @param upper
+//     *            the upper bound.
+//     * @return the random integer.
+//     * @throws NumberIsTooLargeException if {@code lower >= upper}.
+//     */
+//    public int nextSecureInt(int lower, int upper) {
+//        if (lower >= upper) {
+//            throw new NumberIsTooLargeException(LocalizedFormats.LOWER_BOUND_NOT_BELOW_UPPER_BOUND,
+//                                                lower, upper, false);
+//        }
+//        SecureRandom sec = getSecRan();
+//        return lower + (int) (sec.nextDouble() * (upper - lower + 1));
+//    }
 
-        // Compute number of iterations required (40 bytes each)
-        int numIter = (len / 40) + 1;
-
-        StringBuilder outBuffer = new StringBuilder();
-        for (int iter = 1; iter < numIter + 1; iter++) {
-            byte[] randomBytes = new byte[40];
-            secRan.nextBytes(randomBytes);
-            alg.update(randomBytes);
-
-            // Compute hash -- will create 20-byte binary hash
-            byte hash[] = alg.digest();
-
-            // Loop over the hash, converting each byte to 2 hex digits
-            for (int i = 0; i < hash.length; i++) {
-                Integer c = Integer.valueOf(hash[i]);
-
-                /*
-                 * Add 128 to byte value to make interval 0-255 This guarantees
-                 * <= 2 hex digits from toHexString() toHexString would
-                 * otherwise add 2^32 to negative arguments
-                 */
-                String hex = Integer.toHexString(c.intValue() + 128);
-
-                // Keep strings uniform length -- guarantees 40 bytes
-                if (hex.length() == 1) {
-                    hex = "0" + hex;
-                }
-                outBuffer.append(hex);
-            }
-        }
-        return outBuffer.toString().substring(0, len);
-    }
-
-    /**
-     * Generate a random int value uniformly distributed between
-     * <code>lower</code> and <code>upper</code>, inclusive. This algorithm uses
-     * a secure random number generator.
-     *
-     * @param lower
-     *            the lower bound.
-     * @param upper
-     *            the upper bound.
-     * @return the random integer.
-     * @throws NumberIsTooLargeException if {@code lower >= upper}.
-     */
-    public int nextSecureInt(int lower, int upper) {
-        if (lower >= upper) {
-            throw new NumberIsTooLargeException(LocalizedFormats.LOWER_BOUND_NOT_BELOW_UPPER_BOUND,
-                                                lower, upper, false);
-        }
-        SecureRandom sec = getSecRan();
-        return lower + (int) (sec.nextDouble() * (upper - lower + 1));
-    }
-
-    /**
-     * Generate a random long value uniformly distributed between
-     * <code>lower</code> and <code>upper</code>, inclusive. This algorithm uses
-     * a secure random number generator.
-     *
-     * @param lower
-     *            the lower bound.
-     * @param upper
-     *            the upper bound.
-     * @return the random integer.
-     * @throws NumberIsTooLargeException if {@code lower >= upper}.
-     */
-    public long nextSecureLong(long lower, long upper) {
-        if (lower >= upper) {
-            throw new NumberIsTooLargeException(LocalizedFormats.LOWER_BOUND_NOT_BELOW_UPPER_BOUND,
-                                                lower, upper, false);
-        }
-        SecureRandom sec = getSecRan();
-        return lower + (long) (sec.nextDouble() * (upper - lower + 1));
-    }
+//    /**
+//     * Generate a random long value uniformly distributed between
+//     * <code>lower</code> and <code>upper</code>, inclusive. This algorithm uses
+//     * a secure random number generator.
+//     *
+//     * @param lower
+//     *            the lower bound.
+//     * @param upper
+//     *            the upper bound.
+//     * @return the random integer.
+//     * @throws NumberIsTooLargeException if {@code lower >= upper}.
+//     */
+//    public long nextSecureLong(long lower, long upper) {
+//        if (lower >= upper) {
+//            throw new NumberIsTooLargeException(LocalizedFormats.LOWER_BOUND_NOT_BELOW_UPPER_BOUND,
+//                                                lower, upper, false);
+//        }
+//        SecureRandom sec = getSecRan();
+//        return lower + (long) (sec.nextDouble() * (upper - lower + 1));
+//    }
 
     /**
      * {@inheritDoc}
@@ -705,21 +705,21 @@ public class RandomDataImpl implements RandomData, Serializable {
         return rand;
     }
 
-    /**
-     * Returns the SecureRandom used to generate secure random data.
-     * <p>
-     * Creates and initializes if null.
-     * </p>
-     *
-     * @return the SecureRandom used to generate secure random data
-     */
-    private SecureRandom getSecRan() {
-        if (secRand == null) {
-            secRand = new SecureRandom();
-            secRand.setSeed(System.currentTimeMillis());
-        }
-        return secRand;
-    }
+//    /**
+//     * Returns the SecureRandom used to generate secure random data.
+//     * <p>
+//     * Creates and initializes if null.
+//     * </p>
+//     *
+//     * @return the SecureRandom used to generate secure random data
+//     */
+//    private SecureRandom getSecRan() {
+//        if (secRand == null) {
+//            secRand = new SecureRandom();
+//            secRand.setSeed(System.currentTimeMillis());
+//        }
+//        return secRand;
+//    }
 
     /**
      * Reseeds the random number generator with the supplied seed.
@@ -737,35 +737,35 @@ public class RandomDataImpl implements RandomData, Serializable {
         rand.setSeed(seed);
     }
 
-    /**
-     * Reseeds the secure random number generator with the current time in
-     * milliseconds.
-     * <p>
-     * Will create and initialize if null.
-     * </p>
-     */
-    public void reSeedSecure() {
-        if (secRand == null) {
-            secRand = new SecureRandom();
-        }
-        secRand.setSeed(System.currentTimeMillis());
-    }
+//    /**
+//     * Reseeds the secure random number generator with the current time in
+//     * milliseconds.
+//     * <p>
+//     * Will create and initialize if null.
+//     * </p>
+//     */
+//    public void reSeedSecure() {
+//        if (secRand == null) {
+//            secRand = new SecureRandom();
+//        }
+//        secRand.setSeed(System.currentTimeMillis());
+//    }
 
-    /**
-     * Reseeds the secure random number generator with the supplied seed.
-     * <p>
-     * Will create and initialize if null.
-     * </p>
-     *
-     * @param seed
-     *            the seed value to use
-     */
-    public void reSeedSecure(long seed) {
-        if (secRand == null) {
-            secRand = new SecureRandom();
-        }
-        secRand.setSeed(seed);
-    }
+//    /**
+//     * Reseeds the secure random number generator with the supplied seed.
+//     * <p>
+//     * Will create and initialize if null.
+//     * </p>
+//     *
+//     * @param seed
+//     *            the seed value to use
+//     */
+//    public void reSeedSecure(long seed) {
+//        if (secRand == null) {
+//            secRand = new SecureRandom();
+//        }
+//        secRand.setSeed(seed);
+//    }
 
     /**
      * Reseeds the random number generator with the current time in
@@ -778,30 +778,30 @@ public class RandomDataImpl implements RandomData, Serializable {
         rand.setSeed(System.currentTimeMillis());
     }
 
-    /**
-     * Sets the PRNG algorithm for the underlying SecureRandom instance using
-     * the Security Provider API. The Security Provider API is defined in <a
-     * href =
-     * "http://java.sun.com/j2se/1.3/docs/guide/security/CryptoSpec.html#AppA">
-     * Java Cryptography Architecture API Specification & Reference.</a>
-     * <p>
-     * <strong>USAGE NOTE:</strong> This method carries <i>significant</i>
-     * overhead and may take several seconds to execute.
-     * </p>
-     *
-     * @param algorithm
-     *            the name of the PRNG algorithm
-     * @param provider
-     *            the name of the provider
-     * @throws NoSuchAlgorithmException
-     *             if the specified algorithm is not available
-     * @throws NoSuchProviderException
-     *             if the specified provider is not installed
-     */
-    public void setSecureAlgorithm(String algorithm, String provider)
-            throws NoSuchAlgorithmException, NoSuchProviderException {
-        secRand = SecureRandom.getInstance(algorithm, provider);
-    }
+//    /**
+//     * Sets the PRNG algorithm for the underlying SecureRandom instance using
+//     * the Security Provider API. The Security Provider API is defined in <a
+//     * href =
+//     * "http://java.sun.com/j2se/1.3/docs/guide/security/CryptoSpec.html#AppA">
+//     * Java Cryptography Architecture API Specification & Reference.</a>
+//     * <p>
+//     * <strong>USAGE NOTE:</strong> This method carries <i>significant</i>
+//     * overhead and may take several seconds to execute.
+//     * </p>
+//     *
+//     * @param algorithm
+//     *            the name of the PRNG algorithm
+//     * @param provider
+//     *            the name of the provider
+//     * @throws NoSuchAlgorithmException
+//     *             if the specified algorithm is not available
+//     * @throws NoSuchProviderException
+//     *             if the specified provider is not installed
+//     */
+//    public void setSecureAlgorithm(String algorithm, String provider)
+//            throws NoSuchAlgorithmException, NoSuchProviderException {
+//        secRand = SecureRandom.getInstance(algorithm, provider);
+//    }
 
     /**
      * Generates an integer array of length <code>k</code> whose entries are

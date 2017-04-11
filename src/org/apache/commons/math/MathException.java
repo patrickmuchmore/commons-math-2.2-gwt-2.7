@@ -17,7 +17,7 @@
 package org.apache.commons.math;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.Locale;
 
@@ -83,7 +83,7 @@ public class MathException extends Exception implements MathThrowable {
      */
     public MathException(Localizable pattern, Object ... arguments) {
       this.pattern   = pattern;
-      this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
+      this.arguments = (arguments == null) ? new Object[0] : arguments; //.clone();
     }
 
     /**
@@ -128,7 +128,7 @@ public class MathException extends Exception implements MathThrowable {
     public MathException(Throwable rootCause, Localizable pattern, Object ... arguments) {
       super(rootCause);
       this.pattern   = pattern;
-      this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
+      this.arguments = (arguments == null) ? new Object[0] : arguments; //.clone();
     }
 
     /** Gets the pattern used to build the message of this throwable.
@@ -162,7 +162,7 @@ public class MathException extends Exception implements MathThrowable {
 
     /** {@inheritDoc} */
     public Object[] getArguments() {
-        return arguments.clone();
+        return arguments; //.clone();
     }
 
     /** Gets the message in a specified locale.
@@ -206,12 +206,12 @@ public class MathException extends Exception implements MathThrowable {
      */
     @Override
     public void printStackTrace(PrintStream out) {
-        synchronized (out) {
-            PrintWriter pw = new PrintWriter(out, false);
-            printStackTrace(pw);
-            // Flush the PrintWriter before it's GC'ed.
-            pw.flush();
-        }
+//        synchronized (out) {
+//            PrintWriter pw = new PrintWriter(out, false);
+//            printStackTrace(pw);
+//            // Flush the PrintWriter before it's GC'ed.
+//            pw.flush();
+//        }
     }
 
 }

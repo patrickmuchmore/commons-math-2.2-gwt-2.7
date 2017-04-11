@@ -82,70 +82,70 @@ public interface RandomData {
      */
     long nextLong(long lower, long upper);
 
-    /**
-     * Generates a random string of hex characters from a secure random
-     * sequence.
-     * <p>
-     * If cryptographic security is not required,
-     * use <code>nextHexString()</code>.</p>
-     * <p>
-     * <strong>Preconditions</strong>:<ul>
-     * <li><code>len > 0</code> (otherwise an IllegalArgumentException
-     *     is thrown.)</li>
-     * </ul></p>
-     * @param len length of return string
-     * @return the random hex string
-     */
-    String nextSecureHexString(int len);
+//    /**
+//     * Generates a random string of hex characters from a secure random
+//     * sequence.
+//     * <p>
+//     * If cryptographic security is not required,
+//     * use <code>nextHexString()</code>.</p>
+//     * <p>
+//     * <strong>Preconditions</strong>:<ul>
+//     * <li><code>len > 0</code> (otherwise an IllegalArgumentException
+//     *     is thrown.)</li>
+//     * </ul></p>
+//     * @param len length of return string
+//     * @return the random hex string
+//     */
+//    String nextSecureHexString(int len);
 
-    /**
-     * Generates a uniformly distributed random integer between
-     * <code>lower</code> and <code>upper</code> (endpoints included)
-     * from a secure random sequence.
-     * <p>
-     * Sequences of integers generated using this method will be
-     * cryptographically secure. If cryptographic security is not required,
-     * <code>nextInt</code> should be used instead of this method.</p>
-     * <p>
-     * <strong>Definition</strong>:
-     * <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudo-random_number_generator">
-     * Secure Random Sequence</a></p>
-     * <p>
-     * <strong>Preconditions</strong>:<ul>
-     * <li><code>lower < upper</code> (otherwise an IllegalArgumentException
-     *     is thrown.)</li>
-     * </ul></p>
-     *
-     * @param lower lower bound for generated integer
-     * @param upper upper bound for generated integer
-     * @return a random integer greater than or equal to <code>lower</code>
-     * and less than or equal to <code>upper</code>.
-     */
-    int nextSecureInt(int lower, int upper);
+//    /**
+//     * Generates a uniformly distributed random integer between
+//     * <code>lower</code> and <code>upper</code> (endpoints included)
+//     * from a secure random sequence.
+//     * <p>
+//     * Sequences of integers generated using this method will be
+//     * cryptographically secure. If cryptographic security is not required,
+//     * <code>nextInt</code> should be used instead of this method.</p>
+//     * <p>
+//     * <strong>Definition</strong>:
+//     * <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudo-random_number_generator">
+//     * Secure Random Sequence</a></p>
+//     * <p>
+//     * <strong>Preconditions</strong>:<ul>
+//     * <li><code>lower < upper</code> (otherwise an IllegalArgumentException
+//     *     is thrown.)</li>
+//     * </ul></p>
+//     *
+//     * @param lower lower bound for generated integer
+//     * @param upper upper bound for generated integer
+//     * @return a random integer greater than or equal to <code>lower</code>
+//     * and less than or equal to <code>upper</code>.
+//     */
+//    int nextSecureInt(int lower, int upper);
 
-    /**
-     * Generates a random long integer between <code>lower</code>
-     * and <code>upper</code> (endpoints included).
-     * <p>
-     * Sequences of long values generated using this method will be
-     * cryptographically secure. If cryptographic security is not required,
-     * <code>nextLong</code> should be used instead of this method.</p>
-     * <p>
-     * <strong>Definition</strong>:
-     * <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudo-random_number_generator">
-     * Secure Random Sequence</a></p>
-     * <p>
-     * <strong>Preconditions</strong>:<ul>
-     * <li><code>lower < upper</code> (otherwise an IllegalArgumentException
-     *     is thrown.)</li>
-     * </ul></p>
-     *
-     * @param lower lower bound for generated integer
-     * @param upper upper bound for generated integer
-     * @return a long integer greater than or equal to <code>lower</code>
-     * and less than or equal to <code>upper</code>.
-     */
-    long nextSecureLong(long lower, long upper);
+//    /**
+//     * Generates a random long integer between <code>lower</code>
+//     * and <code>upper</code> (endpoints included).
+//     * <p>
+//     * Sequences of long values generated using this method will be
+//     * cryptographically secure. If cryptographic security is not required,
+//     * <code>nextLong</code> should be used instead of this method.</p>
+//     * <p>
+//     * <strong>Definition</strong>:
+//     * <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudo-random_number_generator">
+//     * Secure Random Sequence</a></p>
+//     * <p>
+//     * <strong>Preconditions</strong>:<ul>
+//     * <li><code>lower < upper</code> (otherwise an IllegalArgumentException
+//     *     is thrown.)</li>
+//     * </ul></p>
+//     *
+//     * @param lower lower bound for generated integer
+//     * @param upper upper bound for generated integer
+//     * @return a long integer greater than or equal to <code>lower</code>
+//     * and less than or equal to <code>upper</code>.
+//     */
+//    long nextSecureLong(long lower, long upper);
 
     /**
      * Generates a random value from the Poisson distribution with

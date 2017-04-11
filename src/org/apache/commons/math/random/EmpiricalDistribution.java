@@ -18,8 +18,8 @@
 package org.apache.commons.math.random;
 
 import java.io.IOException;
-import java.io.File;
-import java.net.URL;
+//import java.io.File;
+//import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.math.stat.descriptive.StatisticalSummary;
@@ -57,21 +57,21 @@ public interface EmpiricalDistribution {
      */
     void load(double[] dataArray);
 
-    /**
-     * Computes the empirical distribution from the input file.
-     *
-     * @param file the input file
-     * @throws IOException if an IO error occurs
-     */
-    void load(File file) throws IOException;
-
-    /**
-     * Computes the empirical distribution using data read from a URL.
-     *
-     * @param url url of the input file
-     * @throws IOException if an IO error occurs
-     */
-    void load(URL url) throws IOException;
+//    /**
+//     * Computes the empirical distribution from the input file.
+//     *
+//     * @param file the input file
+//     * @throws IOException if an IO error occurs
+//     */
+//    void load(File file) throws IOException;
+//
+//    /**
+//     * Computes the empirical distribution using data read from a URL.
+//     *
+//     * @param url url of the input file
+//     * @throws IOException if an IO error occurs
+//     */
+//    void load(URL url) throws IOException;
 
     /**
      * Generates a random value from this distribution.

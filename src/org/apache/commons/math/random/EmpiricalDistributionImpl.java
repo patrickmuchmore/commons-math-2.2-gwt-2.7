@@ -17,13 +17,13 @@
 
 package org.apache.commons.math.random;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+//import java.io.BufferedReader;
+//import java.io.File;
+//import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
+//import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,56 +128,56 @@ public class EmpiricalDistributionImpl implements Serializable, EmpiricalDistrib
 
     }
 
-    /**
-     * Computes the empirical distribution using data read from a URL.
-     * @param url  url of the input file
-     *
-     * @throws IOException if an IO error occurs
-     */
-    public void load(URL url) throws IOException {
-        BufferedReader in =
-            new BufferedReader(new InputStreamReader(url.openStream()));
-        try {
-            DataAdapter da = new StreamDataAdapter(in);
-            da.computeStats();
-            if (sampleStats.getN() == 0) {
-                throw MathRuntimeException.createEOFException(LocalizedFormats.URL_CONTAINS_NO_DATA,
-                                                              url);
-            }
-            in = new BufferedReader(new InputStreamReader(url.openStream()));
-            fillBinStats(in);
-            loaded = true;
-        } finally {
-           try {
-               in.close();
-           } catch (IOException ex) {
-               // ignore
-           }
-        }
-    }
-
-    /**
-     * Computes the empirical distribution from the input file.
-     *
-     * @param file the input file
-     * @throws IOException if an IO error occurs
-     */
-    public void load(File file) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        try {
-            DataAdapter da = new StreamDataAdapter(in);
-            da.computeStats();
-            in = new BufferedReader(new FileReader(file));
-            fillBinStats(in);
-            loaded = true;
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
-    }
+//    /**
+//     * Computes the empirical distribution using data read from a URL.
+//     * @param url  url of the input file
+//     *
+//     * @throws IOException if an IO error occurs
+//     */
+//    public void load(URL url) throws IOException {
+//        BufferedReader in =
+//            new BufferedReader(new InputStreamReader(url.openStream()));
+//        try {
+//            DataAdapter da = new StreamDataAdapter(in);
+//            da.computeStats();
+//            if (sampleStats.getN() == 0) {
+//                throw MathRuntimeException.createEOFException(LocalizedFormats.URL_CONTAINS_NO_DATA,
+//                                                              url);
+//            }
+//            in = new BufferedReader(new InputStreamReader(url.openStream()));
+//            fillBinStats(in);
+//            loaded = true;
+//        } finally {
+//           try {
+//               in.close();
+//           } catch (IOException ex) {
+//               // ignore
+//           }
+//        }
+//    }
+//
+//    /**
+//     * Computes the empirical distribution from the input file.
+//     *
+//     * @param file the input file
+//     * @throws IOException if an IO error occurs
+//     */
+//    public void load(File file) throws IOException {
+//        BufferedReader in = new BufferedReader(new FileReader(file));
+//        try {
+//            DataAdapter da = new StreamDataAdapter(in);
+//            da.computeStats();
+//            in = new BufferedReader(new FileReader(file));
+//            fillBinStats(in);
+//            loaded = true;
+//        } finally {
+//            try {
+//                in.close();
+//            } catch (IOException ex) {
+//                // ignore
+//            }
+//        }
+//    }
 
     /**
      * Provides methods for computing <code>sampleStats</code> and
@@ -214,67 +214,68 @@ public class EmpiricalDistributionImpl implements Serializable, EmpiricalDistrib
          * @return DataAdapter instance
          */
         public DataAdapter getAdapter(Object in) {
-            if (in instanceof BufferedReader) {
-                BufferedReader inputStream = (BufferedReader) in;
-                return new StreamDataAdapter(inputStream);
-            } else if (in instanceof double[]) {
+//            if (in instanceof BufferedReader) {
+//                BufferedReader inputStream = (BufferedReader) in;
+//                return new StreamDataAdapter(inputStream);
+//            } else 
+            if (in instanceof double[]) {
                 double[] inputArray = (double[]) in;
                 return new ArrayDataAdapter(inputArray);
             } else {
                 throw MathRuntimeException.createIllegalArgumentException(
                       LocalizedFormats.INPUT_DATA_FROM_UNSUPPORTED_DATASOURCE,
-                      in.getClass().getName(),
-                      BufferedReader.class.getName(), double[].class.getName());
+                      in.getClass().getName());
+                //, BufferedReader.class.getName(), double[].class.getName());
             }
         }
     }
-    /**
-     * <code>DataAdapter</code> for data provided through some input stream
-     */
-    private class StreamDataAdapter extends DataAdapter{
-
-        /** Input stream providing access to the data */
-        private BufferedReader inputStream;
-
-        /**
-         * Create a StreamDataAdapter from a BufferedReader
-         *
-         * @param in BufferedReader input stream
-         */
-        public StreamDataAdapter(BufferedReader in){
-            super();
-            inputStream = in;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void computeBinStats() throws IOException {
-            String str = null;
-            double val = 0.0d;
-            while ((str = inputStream.readLine()) != null) {
-                val = Double.parseDouble(str);
-                SummaryStatistics stats = binStats.get(findBin(val));
-                stats.addValue(val);
-            }
-
-            inputStream.close();
-            inputStream = null;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void computeStats() throws IOException {
-            String str = null;
-            double val = 0.0;
-            sampleStats = new SummaryStatistics();
-            while ((str = inputStream.readLine()) != null) {
-                val = Double.valueOf(str).doubleValue();
-                sampleStats.addValue(val);
-            }
-            inputStream.close();
-            inputStream = null;
-        }
-    }
+//    /**
+//     * <code>DataAdapter</code> for data provided through some input stream
+//     */
+//    private class StreamDataAdapter extends DataAdapter{
+//
+//        /** Input stream providing access to the data */
+//        private BufferedReader inputStream;
+//
+//        /**
+//         * Create a StreamDataAdapter from a BufferedReader
+//         *
+//         * @param in BufferedReader input stream
+//         */
+//        public StreamDataAdapter(BufferedReader in){
+//            super();
+//            inputStream = in;
+//        }
+//
+//        /** {@inheritDoc} */
+//        @Override
+//        public void computeBinStats() throws IOException {
+//            String str = null;
+//            double val = 0.0d;
+//            while ((str = inputStream.readLine()) != null) {
+//                val = Double.parseDouble(str);
+//                SummaryStatistics stats = binStats.get(findBin(val));
+//                stats.addValue(val);
+//            }
+//
+//            inputStream.close();
+//            inputStream = null;
+//        }
+//
+//        /** {@inheritDoc} */
+//        @Override
+//        public void computeStats() throws IOException {
+//            String str = null;
+//            double val = 0.0;
+//            sampleStats = new SummaryStatistics();
+//            while ((str = inputStream.readLine()) != null) {
+//                val = Double.valueOf(str).doubleValue();
+//                sampleStats.addValue(val);
+//            }
+//            inputStream.close();
+//            inputStream = null;
+//        }
+//    }
 
     /**
      * <code>DataAdapter</code> for data provided as array of doubles.

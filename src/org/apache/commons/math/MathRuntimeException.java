@@ -16,10 +16,10 @@
  */
 package org.apache.commons.math;
 
-import java.io.EOFException;
+//import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ConcurrentModificationException;
@@ -75,7 +75,7 @@ public class MathRuntimeException extends RuntimeException implements MathThrowa
      */
     public MathRuntimeException(final Localizable pattern, final Object ... arguments) {
         this.pattern   = pattern;
-        this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
+        this.arguments = (arguments == null) ? new Object[0] : arguments; //.clone();
     }
 
     /**
@@ -121,7 +121,7 @@ public class MathRuntimeException extends RuntimeException implements MathThrowa
                                 final Localizable pattern, final Object ... arguments) {
         super(rootCause);
         this.pattern   = pattern;
-        this.arguments = (arguments == null) ? new Object[0] : arguments.clone();
+        this.arguments = (arguments == null) ? new Object[0] : arguments; //.clone();
     }
 
     /**
@@ -167,7 +167,7 @@ public class MathRuntimeException extends RuntimeException implements MathThrowa
 
     /** {@inheritDoc} */
     public Object[] getArguments() {
-        return arguments.clone();
+        return arguments; //.clone();
     }
 
     /** Gets the message in a specified locale.
@@ -210,12 +210,12 @@ public class MathRuntimeException extends RuntimeException implements MathThrowa
      */
     @Override
     public void printStackTrace(final PrintStream out) {
-        synchronized (out) {
-            PrintWriter pw = new PrintWriter(out, false);
-            printStackTrace(pw);
-            // Flush the PrintWriter before it's GC'ed.
-            pw.flush();
-        }
+//        synchronized (out) {
+//            PrintWriter pw = new PrintWriter(out, false);
+//            printStackTrace(pw);
+//            // Flush the PrintWriter before it's GC'ed.
+//            pw.flush();
+//        }
     }
 
     /**
@@ -306,49 +306,49 @@ public class MathRuntimeException extends RuntimeException implements MathThrowa
         };
     }
 
-    /**
-     * Constructs a new <code>EOFException</code> with specified formatted detail message.
-     * Message formatting is delegated to {@link java.text.MessageFormat}.
-     * @param pattern format specifier
-     * @param arguments format arguments
-     * @return built exception
-     * @deprecated as of 2.2 replaced by {@link #createEOFException(Localizable, Object...)}
-     */
-    @Deprecated
-    public static EOFException createEOFException(final String pattern,
-                                                  final Object ... arguments) {
-        return createEOFException(new DummyLocalizable(pattern), arguments);
-    }
-
-    /**
-     * Constructs a new <code>EOFException</code> with specified formatted detail message.
-     * Message formatting is delegated to {@link java.text.MessageFormat}.
-     * @param pattern format specifier
-     * @param arguments format arguments
-     * @return built exception
-     * @since 2.2
-     */
-    public static EOFException createEOFException(final Localizable pattern,
-                                                  final Object ... arguments) {
-        return new EOFException() {
-
-            /** Serializable version identifier. */
-            private static final long serialVersionUID = 6067985859347601503L;
-
-            /** {@inheritDoc} */
-            @Override
-            public String getMessage() {
-                return buildMessage(Locale.US, pattern, arguments);
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public String getLocalizedMessage() {
-                return buildMessage(Locale.getDefault(), pattern, arguments);
-            }
-
-        };
-    }
+//    /**
+//     * Constructs a new <code>EOFException</code> with specified formatted detail message.
+//     * Message formatting is delegated to {@link java.text.MessageFormat}.
+//     * @param pattern format specifier
+//     * @param arguments format arguments
+//     * @return built exception
+//     * @deprecated as of 2.2 replaced by {@link #createEOFException(Localizable, Object...)}
+//     */
+//    @Deprecated
+//    public static EOFException createEOFException(final String pattern,
+//                                                  final Object ... arguments) {
+//        return createEOFException(new DummyLocalizable(pattern), arguments);
+//    }
+//
+//    /**
+//     * Constructs a new <code>EOFException</code> with specified formatted detail message.
+//     * Message formatting is delegated to {@link java.text.MessageFormat}.
+//     * @param pattern format specifier
+//     * @param arguments format arguments
+//     * @return built exception
+//     * @since 2.2
+//     */
+//    public static EOFException createEOFException(final Localizable pattern,
+//                                                  final Object ... arguments) {
+//        return new EOFException() {
+//
+//            /** Serializable version identifier. */
+//            private static final long serialVersionUID = 6067985859347601503L;
+//
+//            /** {@inheritDoc} */
+//            @Override
+//            public String getMessage() {
+//                return buildMessage(Locale.US, pattern, arguments);
+//            }
+//
+//            /** {@inheritDoc} */
+//            @Override
+//            public String getLocalizedMessage() {
+//                return buildMessage(Locale.getDefault(), pattern, arguments);
+//            }
+//
+//        };
+//    }
 
     /**
      * Constructs a new <code>IOException</code> with specified nested
