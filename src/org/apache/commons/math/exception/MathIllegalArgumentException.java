@@ -84,7 +84,10 @@ public class MathIllegalArgumentException extends IllegalArgumentException imple
 
     /** {@inheritDoc} */
     public Object[] getArguments() {
-        return arguments.clone();
+    	Object[] argumentsCopy = new Object[arguments.length];
+    	System.arraycopy(arguments, 0, arguments, 0, arguments.length);
+        return argumentsCopy;
+    	//return arguments.clone();
     }
 
     /**

@@ -93,7 +93,8 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
         throws IllegalArgumentException {
         try {
             field = d[0].getField();
-            data = d.clone();
+            data = (T[])new Object[d.length]; //d.clone();
+            System.arraycopy(d, 0, data, 0, d.length);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw MathRuntimeException.createIllegalArgumentException(
                       LocalizedFormats.VECTOR_MUST_HAVE_AT_LEAST_ONE_ELEMENT);
@@ -108,7 +109,8 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
      */
     public ArrayFieldVector(Field<T> field, T[] d) {
         this.field = field;
-        data = d.clone();
+        data = (T[])new Object[d.length]; //d.clone();
+        System.arraycopy(d, 0, data, 0, d.length);
     }
 
     /**
@@ -139,7 +141,13 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
                   LocalizedFormats.VECTOR_MUST_HAVE_AT_LEAST_ONE_ELEMENT);
         }
         field = d[0].getField();
-        data = copyArray ? d.clone() :  d;
+        if(copyArray) {
+            data = (T[])new Object[d.length]; //d.clone();
+            System.arraycopy(d, 0, data, 0, d.length);
+        } else {
+        	data = d;
+        }
+        //data = copyArray ? d.clone() :  d;
     }
 
     /**
@@ -157,7 +165,13 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
      */
     public ArrayFieldVector(Field<T> field, T[] d, boolean copyArray) {
         this.field = field;
-        data = copyArray ? d.clone() :  d;
+        if(copyArray) {
+            data = (T[])new Object[d.length]; //d.clone();
+            System.arraycopy(d, 0, data, 0, d.length);
+        } else {
+        	data = d;
+        }
+        //data = copyArray ? d.clone() :  d;
     }
 
     /**
@@ -195,7 +209,8 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
      */
     public ArrayFieldVector(ArrayFieldVector<T> v) {
         field = v.getField();
-        data = v.data.clone();
+        data = (T[])new Object[v.data.length]; //data = v.data.clone();
+        System.arraycopy(v.data, 0, data, 0, v.data.length);
     }
 
     /**
@@ -205,7 +220,13 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
      */
     public ArrayFieldVector(ArrayFieldVector<T> v, boolean deep) {
         field = v.getField();
-        data = deep ? v.data.clone() : v.data;
+        if(deep) {
+            data = (T[])new Object[v.data.length]; //data = v.data.clone();
+            System.arraycopy(v.data, 0, data, 0, v.data.length);
+        } else {
+        	data = v.data;
+        }
+        //data = deep ? v.data.clone() : v.data;
     }
 
     /**
@@ -539,7 +560,10 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
 
     /** {@inheritDoc} */
     public T[] getData() {
-        return data.clone();
+        T[] dataCopy = (T[])new Object[data.length];
+        System.arraycopy(data, 0, dataCopy, 0, data.length);
+        return dataCopy;
+        //return data.clone();
     }
 
     /**
@@ -758,7 +782,10 @@ public class ArrayFieldVector<T extends FieldElement<T>> implements FieldVector<
 
     /** {@inheritDoc} */
     public T[] toArray(){
-        return data.clone();
+        T[] dataCopy = (T[])new Object[data.length];
+        System.arraycopy(data, 0, dataCopy, 0, data.length);
+        return dataCopy;
+        //return data.clone();
     }
 
     /**

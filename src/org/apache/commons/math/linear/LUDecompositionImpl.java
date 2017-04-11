@@ -206,7 +206,10 @@ public class LUDecompositionImpl implements LUDecomposition {
 
     /** {@inheritDoc} */
     public int[] getPivot() {
-        return pivot.clone();
+        int[] pivotCopy = new int[pivot.length];
+        System.arraycopy(pivot, 0, pivotCopy, 0, pivot.length);
+        return pivotCopy;
+    	//return pivot.clone();
     }
 
     /** {@inheritDoc} */

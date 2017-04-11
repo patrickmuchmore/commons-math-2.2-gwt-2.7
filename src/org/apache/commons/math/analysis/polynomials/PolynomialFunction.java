@@ -108,7 +108,10 @@ public class PolynomialFunction implements DifferentiableUnivariateRealFunction,
      * @return  a fresh copy of the coefficients array
      */
     public double[] getCoefficients() {
-        return coefficients.clone();
+    	double[] coefficientsCopy = new double[coefficients.length];
+    	System.arraycopy(coefficients, 0, coefficientsCopy, 0, coefficients.length);
+    	return coefficientsCopy;
+        //return coefficients.clone();
     }
 
     /**

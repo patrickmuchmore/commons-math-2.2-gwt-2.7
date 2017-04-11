@@ -186,7 +186,10 @@ public class SingularValueDecompositionImpl implements
 
     /** {@inheritDoc} */
     public double[] getSingularValues() throws InvalidMatrixException {
-        return singularValues.clone();
+    	double[] singularValuesCopy = new double[singularValues.length];
+    	System.arraycopy(singularValues, 0, singularValuesCopy, 0, singularValues.length);
+        return singularValuesCopy;
+    	//return singularValues.clone();
     }
 
     /** {@inheritDoc} */

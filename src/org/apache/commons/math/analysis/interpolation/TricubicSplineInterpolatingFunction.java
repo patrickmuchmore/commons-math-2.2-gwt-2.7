@@ -189,9 +189,12 @@ public class TricubicSplineInterpolatingFunction
         MathUtils.checkOrder(y);
         MathUtils.checkOrder(z);
 
-        xval = x.clone();
-        yval = y.clone();
-        zval = z.clone();
+        xval = new double[x.length]; //x.clone();
+        System.arraycopy(x, 0, xval, 0, x.length);
+        yval = new double[y.length]; //y.clone();
+        System.arraycopy(y, 0, yval, 0, y.length);
+        zval = new double[z.length]; //z.clone();
+        System.arraycopy(z, 0, zval, 0, z.length);
 
         final int lastI = xLen - 1;
         final int lastJ = yLen - 1;

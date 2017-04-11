@@ -120,7 +120,10 @@ public class MultiStartDifferentiableMultivariateRealOptimizer
         if (optima == null) {
             throw MathRuntimeException.createIllegalStateException(LocalizedFormats.NO_OPTIMUM_COMPUTED_YET);
         }
-        return optima.clone();
+        RealPointValuePair[] optimaCopy = new RealPointValuePair[optima.length];
+        System.arraycopy(optima, 0, optimaCopy, 0, optima.length);
+        return optimaCopy;
+        //return optima.clone();
     }
 
     /** {@inheritDoc} */

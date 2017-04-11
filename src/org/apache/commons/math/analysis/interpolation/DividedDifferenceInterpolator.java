@@ -95,7 +95,8 @@ public class DividedDifferenceInterpolator implements UnivariateRealInterpolator
 
         PolynomialFunctionLagrangeForm.verifyInterpolationArray(x, y);
 
-        final double[] divdiff = y.clone(); // initialization
+        final double[] divdiff = new double[y.length]; //y.clone(); // initialization
+        System.arraycopy(y, 0, divdiff, 0, y.length);
 
         final int n = x.length;
         final double[] a = new double [n];

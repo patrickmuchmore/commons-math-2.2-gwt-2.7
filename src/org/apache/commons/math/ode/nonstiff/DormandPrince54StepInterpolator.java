@@ -126,10 +126,14 @@ class DormandPrince54StepInterpolator
 
     } else {
 
-      v1 = interpolator.v1.clone();
-      v2 = interpolator.v2.clone();
-      v3 = interpolator.v3.clone();
-      v4 = interpolator.v4.clone();
+      v1 = new double[interpolator.v1.length]; //interpolator.v1.clone();
+      System.arraycopy(interpolator.v1, 0, v1, 0, interpolator.v1.length);
+      v2 = new double[interpolator.v2.length]; //interpolator.v2.clone();
+      System.arraycopy(interpolator.v2, 0, v2, 0, interpolator.v2.length);
+      v3 = new double[interpolator.v3.length]; //interpolator.v3.clone();
+      System.arraycopy(interpolator.v3, 0, v3, 0, interpolator.v3.length);
+      v4 = new double[interpolator.v4.length]; //interpolator.v4.clone();
+      System.arraycopy(interpolator.v4, 0, v4, 0, interpolator.v4.length);
       vectorsInitialized = interpolator.vectorsInitialized;
 
     }

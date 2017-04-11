@@ -93,7 +93,8 @@ public abstract class AbstractRealVector implements RealVector {
 
     /** {@inheritDoc} */
     public RealVector add(double[] v) throws IllegalArgumentException {
-        double[] result = v.clone();
+        double[] result = new double[v.length]; //v.clone();
+        System.arraycopy(v, 0, result, 0, v.length);
         Iterator<Entry> it = sparseIterator();
         Entry e;
         while (it.hasNext() && (e = it.next()) != null) {
@@ -120,7 +121,8 @@ public abstract class AbstractRealVector implements RealVector {
 
     /** {@inheritDoc} */
     public RealVector subtract(double[] v) throws IllegalArgumentException {
-        double[] result = v.clone();
+        double[] result = new double[v.length]; //v.clone();
+        System.arraycopy(v, 0, result, 0, v.length);
         Iterator<Entry> it = sparseIterator();
         Entry e;
         while (it.hasNext() && (e = it.next()) != null) {

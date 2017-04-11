@@ -194,7 +194,10 @@ public class MultiStartUnivariateRealOptimizer implements UnivariateRealOptimize
         if (optima == null) {
             throw MathRuntimeException.createIllegalStateException(LocalizedFormats.NO_OPTIMUM_COMPUTED_YET);
         }
-        return optima.clone();
+        double[] optimaCopy = new double[optima.length];
+        System.arraycopy(optima, 0, optimaCopy, 0, optima.length);
+        return optimaCopy;
+        //return optima.clone();
     }
 
     /** Get all the function values at optima found during the last call to {@link
@@ -220,7 +223,10 @@ public class MultiStartUnivariateRealOptimizer implements UnivariateRealOptimize
         if (optimaValues == null) {
             throw MathRuntimeException.createIllegalStateException(LocalizedFormats.NO_OPTIMUM_COMPUTED_YET);
         }
-        return optimaValues.clone();
+        double[] optimaValuesCopy = new double[optimaValues.length];
+        System.arraycopy(optimaValues, 0, optimaValuesCopy, 0, optimaValues.length);
+        return optimaValuesCopy;
+        //return optimaValues.clone();
     }
 
     /** {@inheritDoc} */

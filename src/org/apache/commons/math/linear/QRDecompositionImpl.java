@@ -300,7 +300,8 @@ public class QRDecompositionImpl implements QRDecomposition {
             }
 
             final double[] x = new double[n];
-            final double[] y = b.clone();
+            final double[] y = new double[b.length]; //b.clone();
+            System.arraycopy(b, 0, y, 0, b.length);
 
             // apply Householder transforms to solve Q.y = b
             for (int minor = 0; minor < FastMath.min(m, n); minor++) {

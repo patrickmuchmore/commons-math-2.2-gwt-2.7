@@ -118,8 +118,10 @@ public class BicubicSplineInterpolatingFunction
         MathUtils.checkOrder(x);
         MathUtils.checkOrder(y);
 
-        xval = x.clone();
-        yval = y.clone();
+        xval = new double[x.length]; //x.clone();
+        System.arraycopy(x, 0, xval, 0, x.length);
+        yval = new double[y.length]; //y.clone();
+        System.arraycopy(y, 0, yval, 0, y.length);
 
         final int lastI = xLen - 1;
         final int lastJ = yLen - 1;

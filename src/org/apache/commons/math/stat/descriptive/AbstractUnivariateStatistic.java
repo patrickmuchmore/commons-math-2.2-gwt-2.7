@@ -50,7 +50,13 @@ public abstract class AbstractUnivariateStatistic
      * @see #evaluate()
      */
     public void setData(final double[] values) {
-        storedData = (values == null) ? null : values.clone();
+    	if(values == null) {
+    		storedData = null;
+    	} else {
+    		storedData = new double[values.length];
+    		System.arraycopy(values, 0, storedData, 0, values.length);
+    	}
+        //storedData = (values == null) ? null : values.clone();
     }
 
     /**
@@ -58,7 +64,14 @@ public abstract class AbstractUnivariateStatistic
      * @return copy of the stored data array (may be null)
      */
     public double[] getData() {
-        return (storedData == null) ? null : storedData.clone();
+    	if(storedData == null) {
+    		return null;
+    	} else {
+    		double[] dataCopy = new double[storedData.length];
+    		System.arraycopy(storedData, 0, dataCopy, 0, storedData.length);
+    		return dataCopy;
+    	}
+        //return (storedData == null) ? null : storedData.clone();
     }
 
     /**

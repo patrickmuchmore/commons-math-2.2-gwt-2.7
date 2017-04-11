@@ -54,7 +54,8 @@ public class GaussianParametersGuesser {
         if (observations.length < 3) {
             throw new NumberIsTooSmallException(observations.length, 3, true);
         }
-        this.observations = observations.clone();
+        this.observations = new WeightedObservedPoint[observations.length]; //observations.clone();
+        System.arraycopy(observations, 0, this.observations, 0, observations.length);
     }
 
     /**
@@ -66,7 +67,10 @@ public class GaussianParametersGuesser {
         if (parameters == null) {
             parameters = basicGuess(observations);
         }
-        return parameters.clone();
+        double[] parametersCopy = new double[parameters.length];
+        System.arraycopy(parameters, 0, parametersCopy, 0, parameters.length);
+        return parametersCopy;
+        //return parameters.clone();
     }
 
     /**

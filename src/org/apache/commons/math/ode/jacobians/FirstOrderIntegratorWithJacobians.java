@@ -476,9 +476,12 @@ public class FirstOrderIntegratorWithJacobians {
         public FiniteDifferencesWrapper(final ParameterizedODE ode,
                                         final double[] p, final double[] hY, final double[] hP) {
             this.ode = ode;
-            this.p  = p.clone();
-            this.hY = hY.clone();
-            this.hP = hP.clone();
+            this.p  = new double[p.length]; //p.clone();
+            System.arraycopy(p, 0, this.p, 0, p.length);
+            this.hY = new double[hY.length]; //hY.clone();
+            System.arraycopy(hY, 0, this.hY, 0, hY.length);
+            this.hP = new double[hP.length]; //hP.clone();
+            System.arraycopy(hP, 0, this.hP, 0, hP.length);
             tmpDot = new double[ode.getDimension()];
         }
 

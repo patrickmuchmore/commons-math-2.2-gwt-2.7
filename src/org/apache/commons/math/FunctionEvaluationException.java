@@ -57,7 +57,8 @@ public class FunctionEvaluationException extends MathException  {
      */
     public FunctionEvaluationException(double[] argument) {
         super(LocalizedFormats.EVALUATION_FAILED, new ArrayRealVector(argument));
-        this.argument = argument.clone();
+        this.argument = new double[argument.length]; //argument.clone();
+        System.arraycopy(argument, 0, this.argument, 0, argument.length);
     }
 
     /**
@@ -111,7 +112,8 @@ public class FunctionEvaluationException extends MathException  {
     public FunctionEvaluationException(double[] argument,
                                        Localizable pattern, Object ... arguments) {
         super(pattern, arguments);
-        this.argument = argument.clone();
+        this.argument = new double[argument.length]; //argument.clone();
+        System.arraycopy(argument, 0, this.argument, 0, argument.length);
     }
 
     /**
@@ -135,7 +137,8 @@ public class FunctionEvaluationException extends MathException  {
      */
     public FunctionEvaluationException(Throwable cause, double[] argument) {
         super(cause);
-        this.argument = argument.clone();
+        this.argument = new double[argument.length]; //argument.clone();
+        System.arraycopy(argument, 0, this.argument, 0, argument.length);
     }
 
     /**
@@ -197,7 +200,8 @@ public class FunctionEvaluationException extends MathException  {
                                        double[] argument, Localizable pattern,
                                        Object ... arguments) {
         super(cause, pattern, arguments);
-        this.argument = argument.clone();
+        this.argument = new double[argument.length]; //argument.clone();
+        System.arraycopy(argument, 0, this.argument, 0, argument.length);
     }
 
     /**
@@ -206,6 +210,9 @@ public class FunctionEvaluationException extends MathException  {
      * @return  argument that caused function evaluation to fail
      */
     public double[] getArgument() {
-        return argument.clone();
+    	double[] argumentCopy = new double[argument.length];
+    	System.arraycopy(argument, 0, argumentCopy, 0, argument.length);
+        return argumentCopy;
+    	//return argument.clone();
     }
 }

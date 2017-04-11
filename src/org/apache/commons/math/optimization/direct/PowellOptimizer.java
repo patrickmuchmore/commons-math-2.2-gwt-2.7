@@ -90,7 +90,8 @@ public class PowellOptimizer
     protected RealPointValuePair doOptimize()
         throws FunctionEvaluationException,
                OptimizationException {
-        final double[] guess = point.clone();
+        final double[] guess = new double[point.length]; //point.clone();
+        System.arraycopy(point, 0, guess, 0, point.length);
         final int n = guess.length;
 
         final double[][] direc = new double[n][n];
@@ -100,7 +101,8 @@ public class PowellOptimizer
 
         double[] x = guess;
         double fVal = computeObjectiveValue(x);
-        double[] x1 = x.clone();
+        double[] x1 = new double[x.length]; //x.clone();
+        System.arraycopy(x, 0, x1, 0, x.length);
         while (true) {
             incrementIterationsCounter();
 
@@ -143,8 +145,9 @@ public class PowellOptimizer
                 d[i] = x[i] - x1[i];
                 x2[i] = 2 * x[i] - x1[i];
             }
-
-            x1 = x.clone();
+            
+            x1 = new double[x.length]; //x.clone();
+            System.arraycopy(x, 0, x1, 0, x.length);
             fX2 = computeObjectiveValue(x2);
 
             if (fX > fX2) {

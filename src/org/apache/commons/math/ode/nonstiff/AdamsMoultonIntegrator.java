@@ -364,7 +364,8 @@ public class AdamsMoultonIntegrator extends AdamsIntegrator {
             this.previous = previous;
             this.scaled   = scaled;
             this.after    = state;
-            this.before   = state.clone();
+            this.before   = new double[state.length]; //state.clone();
+            System.arraycopy(state, 0, this.before, 0, state.length);
         }
 
         /** {@inheritDoc} */

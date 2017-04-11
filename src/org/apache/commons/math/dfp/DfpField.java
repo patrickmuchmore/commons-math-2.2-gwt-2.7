@@ -425,7 +425,10 @@ public class DfpField implements Field<Dfp> {
      * @return a {@link Dfp} with value &radic;2 split in two pieces
      */
     public Dfp[] getSqr2Split() {
-        return sqr2Split.clone();
+    	Dfp[] sqr2SplitCopy = new Dfp[sqr2Split.length];
+    	System.arraycopy(sqr2Split, 0, sqr2SplitCopy, 0, sqr2Split.length);
+    	return sqr2SplitCopy;
+        //return sqr2Split.clone();
     }
 
     /** Get the constant &radic;2 / 2.
@@ -460,7 +463,10 @@ public class DfpField implements Field<Dfp> {
      * @return a {@link Dfp} with value &pi; split in two pieces
      */
     public Dfp[] getPiSplit() {
-        return piSplit.clone();
+    	Dfp[] piSplitCopy = new Dfp[piSplit.length];
+    	System.arraycopy(piSplit, 0, piSplitCopy, 0, piSplit.length);
+    	return piSplitCopy;
+        //return piSplit.clone();
     }
 
     /** Get the constant e.
@@ -474,7 +480,10 @@ public class DfpField implements Field<Dfp> {
      * @return a {@link Dfp} with value e split in two pieces
      */
     public Dfp[] getESplit() {
-        return eSplit.clone();
+    	Dfp[] eSplitCopy = new Dfp[eSplit.length];
+    	System.arraycopy(eSplit, 0, eSplitCopy, 0, eSplit.length);
+    	return eSplitCopy;
+        //return eSplit.clone();
     }
 
     /** Get the constant ln(2).
@@ -488,7 +497,10 @@ public class DfpField implements Field<Dfp> {
      * @return a {@link Dfp} with value ln(2) split in two pieces
      */
     public Dfp[] getLn2Split() {
-        return ln2Split.clone();
+    	Dfp[] ln2SplitCopy = new Dfp[ln2Split.length];
+    	System.arraycopy(ln2Split, 0, ln2SplitCopy, 0, ln2Split.length);
+    	return ln2SplitCopy;
+        //return ln2Split.clone();
     }
 
     /** Get the constant ln(5).
@@ -502,7 +514,10 @@ public class DfpField implements Field<Dfp> {
      * @return a {@link Dfp} with value ln(5) split in two pieces
      */
     public Dfp[] getLn5Split() {
-        return ln5Split.clone();
+    	Dfp[] ln5SplitCopy = new Dfp[ln5Split.length];
+    	System.arraycopy(ln5Split, 0, ln5SplitCopy, 0, ln5Split.length);
+    	return ln5SplitCopy;
+        //return ln5Split.clone();
     }
 
     /** Get the constant ln(10).

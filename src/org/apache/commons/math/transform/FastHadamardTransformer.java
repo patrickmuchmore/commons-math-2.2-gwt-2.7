@@ -168,7 +168,8 @@ public class FastHadamardTransformer implements RealTransformer {
         // Instead of creating a matrix with p+1 columns and n rows
         // we will use two single dimension arrays which we will use in an alternating way.
         double[] yPrevious = new double[n];
-        double[] yCurrent  = x.clone();
+        double[] yCurrent  = new double[x.length]; //x.clone();
+        System.arraycopy(x, 0, yCurrent, 0, x.length);
 
         // iterate from left to right (column)
         for (int j = 1; j < n; j <<= 1) {
@@ -219,8 +220,9 @@ public class FastHadamardTransformer implements RealTransformer {
         // Instead of creating a matrix with p+1 columns and n rows
         // we will use two single dimension arrays which we will use in an alternating way.
         int[] yPrevious = new int[n];
-        int[] yCurrent  = x.clone();
-
+        int[] yCurrent  = new int[x.length]; //x.clone();
+        System.arraycopy(x, 0, yCurrent, 0, x.length);
+       
         // iterate from left to right (column)
         for (int j = 1; j < n; j <<= 1) {
 

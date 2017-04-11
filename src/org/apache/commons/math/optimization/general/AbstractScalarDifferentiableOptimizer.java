@@ -188,7 +188,8 @@ public abstract class AbstractScalarDifferentiableOptimizer
         function = f;
         gradient = f.gradient();
         goal     = goalType;
-        point    = startPoint.clone();
+        point    = new double[startPoint.length]; //startPoint.clone();
+        System.arraycopy(startPoint, 0, point, 0, startPoint.length);
 
         return doOptimize();
 

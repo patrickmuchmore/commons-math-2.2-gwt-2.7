@@ -44,8 +44,20 @@ public class VectorialPointValuePair implements Serializable {
      * @param value value of an objective function at the point
      */
     public VectorialPointValuePair(final double[] point, final double[] value) {
-        this.point = (point == null) ? null : point.clone();
-        this.value = (value == null) ? null : value.clone();
+    	if(point == null) {
+    		this.point = null;
+    	} else {
+    		this.point = new double[point.length];
+    		System.arraycopy(point, 0, this.point, 0, point.length);
+    	}
+        //this.point = (point == null) ? null : point.clone();
+    	if(value == null) {
+    		this.value = null;
+    	} else {
+    		this.value = new double[value.length];
+    		System.arraycopy(value, 0, this.value, 0, value.length);
+    	}
+        //this.value = (value == null) ? null : value.clone();
     }
 
     /** Build a point/objective function value pair.
@@ -57,19 +69,46 @@ public class VectorialPointValuePair implements Serializable {
      */
     public VectorialPointValuePair(final double[] point, final double[] value,
                                    final boolean copyArray) {
-        this.point = copyArray ?
-                      ((point == null) ? null : point.clone()) :
-                      point;
-        this.value = copyArray ?
-                      ((value == null) ? null : value.clone()) :
-                      value;
+    	if(copyArray) {
+    		if(point == null) {
+    			this.point = null;
+    		} else {
+    			this.point = new double[point.length];
+    			System.arraycopy(point, 0, this.point, 0, point.length);
+    		}
+    	} else {
+    		this.point = point;
+    	}
+//        this.point = copyArray ?
+//                      ((point == null) ? null : point.clone()) :
+//                      point;
+    	if(copyArray) {
+    		if(value == null) {
+    			this.value = null;
+    		} else {
+    			this.value = new double[value.length];
+    			System.arraycopy(value, 0, this.value, 0, value.length);
+    		}
+    	} else {
+    		this.value = value;
+    	}
+//        this.value = copyArray ?
+//                      ((value == null) ? null : value.clone()) :
+//                      value;
     }
 
     /** Get the point.
      * @return a copy of the stored point
      */
     public double[] getPoint() {
-        return (point == null) ? null : point.clone();
+    	if(point == null) {
+    		return null;
+    	} else {
+    		double[] pointCopy = new double[point.length];
+    		System.arraycopy(point, 0, pointCopy, 0, point.length);
+    		return pointCopy;
+    	}
+        //return (point == null) ? null : point.clone();
     }
 
     /** Get a reference to the point.
@@ -85,7 +124,14 @@ public class VectorialPointValuePair implements Serializable {
      * @return a copy of the stored value of the objective function
      */
     public double[] getValue() {
-        return (value == null) ? null : value.clone();
+    	if(value == null) {
+    		return null;
+    	} else {
+    		double[] valueCopy = new double[value.length];
+    		System.arraycopy(value, 0, valueCopy, 0, value.length);
+    		return valueCopy;
+    	}
+        //return (value == null) ? null : value.clone();
     }
 
     /** Get a reference to the value of the objective function.

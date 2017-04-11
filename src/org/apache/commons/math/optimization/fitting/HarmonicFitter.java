@@ -58,7 +58,8 @@ public class HarmonicFitter {
     public HarmonicFitter(final DifferentiableMultivariateVectorialOptimizer optimizer,
                           final double[] initialGuess) {
         this.fitter     = new CurveFitter(optimizer);
-        this.parameters = initialGuess.clone();
+        this.parameters = new double[initialGuess.length]; //initialGuess.clone();
+        System.arraycopy(initialGuess, 0, this.parameters, 0, initialGuess.length);
     }
 
     /** Add an observed weighted (x,y) point to the sample.

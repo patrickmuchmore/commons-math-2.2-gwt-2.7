@@ -341,9 +341,12 @@ public abstract class AbstractLeastSquaresOptimizer implements DifferentiableMul
         // store least squares problem characteristics
         function         = f;
         jF               = f.jacobian();
-        targetValues     = target.clone();
-        residualsWeights = weights.clone();
-        this.point       = startPoint.clone();
+        targetValues     = new double[target.length]; //target.clone();
+        System.arraycopy(target, 0, targetValues, 0, target.length);
+        residualsWeights = new double[weights.length]; //weights.clone();
+        System.arraycopy(weights, 0, residualsWeights, 0, weights.length);
+        this.point       = new double[startPoint.length]; //startPoint.clone();
+        System.arraycopy(startPoint, 0, this.point, 0, startPoint.length);
         this.residuals   = new double[target.length];
 
         // arrays shared with the other private methods

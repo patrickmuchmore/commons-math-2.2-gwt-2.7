@@ -76,7 +76,8 @@ public class LeastSquaresConverter implements MultivariateRealFunction {
     public LeastSquaresConverter(final MultivariateVectorialFunction function,
                                  final double[] observations) {
         this.function     = function;
-        this.observations = observations.clone();
+        this.observations = new double[observations.length]; //observations.clone();
+        System.arraycopy(observations, 0, this.observations, 0, observations.length);
         this.weights      = null;
         this.scale        = null;
     }
@@ -118,8 +119,10 @@ public class LeastSquaresConverter implements MultivariateRealFunction {
                     observations.length, weights.length);
         }
         this.function     = function;
-        this.observations = observations.clone();
-        this.weights      = weights.clone();
+        this.observations = new double[observations.length]; //observations.clone();
+        System.arraycopy(observations, 0, this.observations, 0, observations.length);
+        this.weights      = new double[weights.length]; //weights.clone();
+        System.arraycopy(weights, 0, this.weights, 0, weights.length);
         this.scale        = null;
     }
 
@@ -151,7 +154,8 @@ public class LeastSquaresConverter implements MultivariateRealFunction {
                     observations.length, scale.getColumnDimension());
         }
         this.function     = function;
-        this.observations = observations.clone();
+        this.observations = new double[observations.length]; //observations.clone();
+        System.arraycopy(observations, 0, this.observations, 0, observations.length);
         this.weights      = null;
         this.scale        = scale.copy();
     }

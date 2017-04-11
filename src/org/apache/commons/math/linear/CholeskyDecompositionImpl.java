@@ -218,7 +218,8 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
                         b.length, m);
             }
 
-            final double[] x = b.clone();
+            final double[] x = new double[b.length]; //b.clone();
+            System.arraycopy(b, 0, x, 0, b.length);
 
             // Solve LY = b
             for (int j = 0; j < m; j++) {

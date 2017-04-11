@@ -142,7 +142,8 @@ public class HarmonicCoefficientsGuesser {
      * @param observations sampled observations
      */
     public HarmonicCoefficientsGuesser(WeightedObservedPoint[] observations) {
-        this.observations = observations.clone();
+        this.observations = new WeightedObservedPoint[observations.length]; //observations.clone();
+        System.arraycopy(observations, 0, this.observations, 0, observations.length);
         a                 = Double.NaN;
         omega             = Double.NaN;
     }

@@ -132,8 +132,8 @@ public class NonLinearConjugateGradientOptimizer
 
             // initial search direction
             double[] steepestDescent = preconditioner.precondition(point, r);
-            double[] searchDirection = steepestDescent.clone();
-
+            double[] searchDirection = new double[steepestDescent.length]; //steepestDescent.clone();
+            System.arraycopy(steepestDescent, 0, searchDirection, 0, steepestDescent.length);
             double delta = 0;
             for (int i = 0; i < n; ++i) {
                 delta += r[i] * searchDirection[i];
@@ -197,7 +197,8 @@ public class NonLinearConjugateGradientOptimizer
                 // compute conjugate search direction
                 if ((getIterations() % n == 0) || (beta < 0)) {
                     // break conjugation: reset search direction
-                    searchDirection = steepestDescent.clone();
+                	searchDirection = new double[steepestDescent.length]; //steepestDescent.clone();
+                    System.arraycopy(steepestDescent, 0, searchDirection, 0, steepestDescent.length);
                 } else {
                     // compute new conjugate search direction
                     for (int i = 0; i < n; ++i) {
@@ -241,7 +242,10 @@ public class NonLinearConjugateGradientOptimizer
 
         /** {@inheritDoc} */
         public double[] precondition(double[] variables, double[] r) {
-            return r.clone();
+        	double[] rCopy = new double[r.length];
+        	System.arraycopy(r, 0, rCopy, 0, r.length);
+            return rCopy;
+            //return r.clone();
         }
 
     }
@@ -270,7 +274,8 @@ public class NonLinearConjugateGradientOptimizer
         public double value(double x) throws FunctionEvaluationException {
 
             // current point in the search direction
-            final double[] shiftedPoint = point.clone();
+            final double[] shiftedPoint = new double[point.length]; //point.clone();
+            System.arraycopy(point, 0, shiftedPoint, 0, point.length);
             for (int i = 0; i < shiftedPoint.length; ++i) {
                 shiftedPoint[i] += x * searchDirection[i];
             }

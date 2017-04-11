@@ -56,8 +56,10 @@ public class UncorrelatedRandomVectorGenerator
     if (mean.length != standardDeviation.length) {
         throw new DimensionMismatchException(mean.length, standardDeviation.length);
     }
-    this.mean              = mean.clone();
-    this.standardDeviation = standardDeviation.clone();
+    this.mean              = new double[mean.length]; //mean.clone();
+    System.arraycopy(mean, 0, this.mean, 0, mean.length);
+    this.standardDeviation = new double[standardDeviation.length]; //standardDeviation.clone();
+    System.arraycopy(standardDeviation, 0, this.standardDeviation, 0, standardDeviation.length);
     this.generator = generator;
   }
 

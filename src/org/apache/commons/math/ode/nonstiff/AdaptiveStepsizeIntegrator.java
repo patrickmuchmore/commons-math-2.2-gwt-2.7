@@ -142,8 +142,12 @@ public abstract class AdaptiveStepsizeIntegrator
 
     this.scalAbsoluteTolerance = 0;
     this.scalRelativeTolerance = 0;
-    this.vecAbsoluteTolerance  = vecAbsoluteTolerance.clone();
-    this.vecRelativeTolerance  = vecRelativeTolerance.clone();
+    this.vecAbsoluteTolerance  = new double[vecAbsoluteTolerance.length]; 
+    //vecAbsoluteTolerance.clone();
+    System.arraycopy(vecAbsoluteTolerance, 0, this.vecAbsoluteTolerance, 0, vecAbsoluteTolerance.length);
+    this.vecRelativeTolerance  = new double[vecRelativeTolerance.length]; 
+    //vecRelativeTolerance.clone();
+    System.arraycopy(vecRelativeTolerance, 0, this.vecRelativeTolerance, 0, vecRelativeTolerance.length);
 
     resetInternalState();
 

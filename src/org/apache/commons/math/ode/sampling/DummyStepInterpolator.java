@@ -78,7 +78,8 @@ public class DummyStepInterpolator
    */
   public DummyStepInterpolator(final DummyStepInterpolator interpolator) {
     super(interpolator);
-    currentDerivative = interpolator.currentDerivative.clone();
+    currentDerivative = new double[interpolator.currentDerivative.length]; //interpolator.currentDerivative.clone();
+    System.arraycopy(interpolator.currentDerivative, 0, currentDerivative, 0, interpolator.currentDerivative.length);
   }
 
   /** Really copy the finalized instance.

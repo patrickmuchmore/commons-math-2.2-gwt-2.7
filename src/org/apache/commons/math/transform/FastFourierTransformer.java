@@ -715,7 +715,10 @@ public class FastFourierTransformer implements Serializable {
          * @return size in all dimensions
          */
         public int[] getDimensionSizes() {
-            return dimensionSize.clone();
+            int[] dimensionSizeCopy = new int[dimensionSize.length];
+            System.arraycopy(dimensionSize, 0, dimensionSizeCopy, 0, dimensionSize.length);
+        	return dimensionSizeCopy;
+            //return dimensionSize.clone();
         }
 
         /**

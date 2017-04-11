@@ -124,7 +124,10 @@ public class MultiStartDifferentiableMultivariateVectorialOptimizer
         if (optima == null) {
             throw MathRuntimeException.createIllegalStateException(LocalizedFormats.NO_OPTIMUM_COMPUTED_YET);
         }
-        return optima.clone();
+        VectorialPointValuePair[] optimaCopy = new VectorialPointValuePair[optima.length];
+        System.arraycopy(optima, 0, optimaCopy, 0, optima.length);
+        return optimaCopy;
+        //return optima.clone();
     }
 
     /** {@inheritDoc} */

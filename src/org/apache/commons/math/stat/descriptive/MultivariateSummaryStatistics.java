@@ -428,7 +428,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the sum
      */
     public StorelessUnivariateStatistic[] getSumImpl() {
-        return sumImpl.clone();
+    	StorelessUnivariateStatistic[] sumImplCopy = new StorelessUnivariateStatistic[sumImpl.length];
+    	System.arraycopy(sumImpl, 0, sumImplCopy, 0, sumImpl.length);
+    	return sumImplCopy;
+        //return sumImpl.clone();
     }
 
     /**
@@ -455,7 +458,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the sum of squares
      */
     public StorelessUnivariateStatistic[] getSumsqImpl() {
-        return sumSqImpl.clone();
+    	StorelessUnivariateStatistic[] sumSqImplCopy = new StorelessUnivariateStatistic[sumSqImpl.length];
+    	System.arraycopy(sumSqImpl, 0, sumSqImplCopy, 0, sumSqImpl.length);
+    	return sumSqImplCopy;
+        //return sumSqImpl.clone();
     }
 
     /**
@@ -482,7 +488,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the minimum
      */
     public StorelessUnivariateStatistic[] getMinImpl() {
-        return minImpl.clone();
+    	StorelessUnivariateStatistic[] minImplCopy = new StorelessUnivariateStatistic[minImpl.length];
+    	System.arraycopy(minImpl, 0, minImplCopy, 0, minImpl.length);
+    	return minImplCopy;
+        //return minImpl.clone();
     }
 
     /**
@@ -509,7 +518,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the maximum
      */
     public StorelessUnivariateStatistic[] getMaxImpl() {
-        return maxImpl.clone();
+    	StorelessUnivariateStatistic[] maxImplCopy = new StorelessUnivariateStatistic[maxImpl.length];
+    	System.arraycopy(maxImpl, 0, maxImplCopy, 0, maxImpl.length);
+    	return maxImplCopy;
+        //return maxImpl.clone();
     }
 
     /**
@@ -536,7 +548,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the log sum
      */
     public StorelessUnivariateStatistic[] getSumLogImpl() {
-        return sumLogImpl.clone();
+    	StorelessUnivariateStatistic[] sumLogImplCopy = new StorelessUnivariateStatistic[sumLogImpl.length];
+    	System.arraycopy(sumLogImpl, 0, sumLogImplCopy, 0, sumLogImpl.length);
+    	return sumLogImplCopy;
+        //return sumLogImpl.clone();
     }
 
     /**
@@ -563,7 +578,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the geometric mean
      */
     public StorelessUnivariateStatistic[] getGeoMeanImpl() {
-        return geoMeanImpl.clone();
+    	StorelessUnivariateStatistic[] geoMeanImplCopy = new StorelessUnivariateStatistic[geoMeanImpl.length];
+    	System.arraycopy(geoMeanImpl, 0, geoMeanImplCopy, 0, geoMeanImpl.length);
+    	return geoMeanImplCopy;
+        //return geoMeanImpl.clone();
     }
 
     /**
@@ -590,7 +608,10 @@ public class MultivariateSummaryStatistics
      * @return the StorelessUnivariateStatistic implementing the mean
      */
     public StorelessUnivariateStatistic[] getMeanImpl() {
-        return meanImpl.clone();
+    	StorelessUnivariateStatistic[] meanImplCopy = new StorelessUnivariateStatistic[meanImpl.length];
+    	System.arraycopy(meanImpl, 0, meanImplCopy, 0, meanImpl.length);
+    	return meanImplCopy;
+        //return meanImpl.clone();
     }
 
     /**

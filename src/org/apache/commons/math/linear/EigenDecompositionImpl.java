@@ -121,8 +121,10 @@ public class EigenDecompositionImpl implements EigenDecomposition {
     public EigenDecompositionImpl(final double[] main,final double[] secondary,
             final double splitTolerance)
             throws InvalidMatrixException {
-        this.main      = main.clone();
-        this.secondary = secondary.clone();
+        this.main      = new double[main.length]; //main.clone();
+        System.arraycopy(main, 0, this.main, 0, main.length);
+        this.secondary = new double[secondary.length]; //secondary.clone();
+        System.arraycopy(secondary, 0, this.secondary, 0, secondary.length);
         transformer    = null;
         final int size=main.length;
         double[][] z = new double[size][size];
@@ -197,7 +199,10 @@ public class EigenDecompositionImpl implements EigenDecomposition {
 
     /** {@inheritDoc} */
     public double[] getRealEigenvalues() throws InvalidMatrixException {
-        return realEigenvalues.clone();
+        double[] realEigenvaluesCopy = new double[realEigenvalues.length];
+        System.arraycopy(realEigenvalues, 0, realEigenvaluesCopy, 0, realEigenvalues.length);
+        return realEigenvaluesCopy;
+        //return realEigenvalues.clone();
     }
 
     /** {@inheritDoc} */
@@ -208,7 +213,10 @@ public class EigenDecompositionImpl implements EigenDecomposition {
 
     /** {@inheritDoc} */
     public double[] getImagEigenvalues() throws InvalidMatrixException {
-        return imagEigenvalues.clone();
+    	double[] imagEigenvaluesCopy = new double[imagEigenvalues.length];
+    	System.arraycopy(imagEigenvalues, 0, imagEigenvaluesCopy, 0, imagEigenvalues.length);
+        return imagEigenvaluesCopy;
+    	//return imagEigenvalues.clone();
     }
 
     /** {@inheritDoc} */
@@ -470,7 +478,11 @@ public class EigenDecompositionImpl implements EigenDecomposition {
      */
     private void findEigenVectors(double[][] householderMatrix) {
 
-        double[][]z = householderMatrix.clone();
+        double[][]z = new double[householderMatrix.length][]; //householderMatrix.clone();
+        for(int i=0; i<householderMatrix.length; i++) {
+        	z[i] = new double[householderMatrix[i].length];
+        	System.arraycopy(householderMatrix[i], 0, z[i], 0, householderMatrix[i].length);
+        }
         final int n = main.length;
         realEigenvalues = new double[n];
         imagEigenvalues = new double[n];

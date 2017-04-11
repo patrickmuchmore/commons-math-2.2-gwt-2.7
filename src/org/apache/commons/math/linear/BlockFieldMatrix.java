@@ -177,7 +177,8 @@ public class BlockFieldMatrix<T extends FieldElement<T>> extends AbstractFieldMa
                             blockData[index].length, iHeight * blockWidth(jBlock));
                 }
                 if (copyArray) {
-                    blocks[index] = blockData[index].clone();
+                    blocks[index] = (T[])new Object[blockData[index].length]; //blockData[index].clone();
+                    System.arraycopy(blockData[index], 0, blocks[index], 0, blockData[index].length);
                 }
             }
         }

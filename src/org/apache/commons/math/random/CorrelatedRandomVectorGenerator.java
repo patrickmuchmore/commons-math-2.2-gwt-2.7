@@ -103,7 +103,8 @@ public class CorrelatedRandomVectorGenerator
         if (mean.length != order) {
             throw new DimensionMismatchException(mean.length, order);
         }
-        this.mean = mean.clone();
+        this.mean = new double[mean.length]; //mean.clone();
+        System.arraycopy(mean, 0, this.mean, 0, mean.length);
 
         decompose(covariance, small);
 

@@ -331,7 +331,9 @@ public abstract class MultistepIntegrator extends AdaptiveStepsizeIntegrator {
 
             // compute the first scaled derivative
             interpolator.setInterpolatedTime(prev);
-            scaled = interpolator.getInterpolatedDerivatives().clone();
+            scaled = new double[interpolator.getInterpolatedDerivatives().length]; 
+            System.arraycopy(interpolator.getInterpolatedDerivatives(), 0, scaled, 0, interpolator.getInterpolatedDerivatives().length);
+            //interpolator.getInterpolatedDerivatives().clone();
             for (int j = 0; j < n; ++j) {
                 scaled[j] *= stepSize;
             }
@@ -340,7 +342,9 @@ public abstract class MultistepIntegrator extends AdaptiveStepsizeIntegrator {
             final double[][] multistep = new double[nSteps][];
             for (int i = 1; i <= nSteps; ++i) {
                 interpolator.setInterpolatedTime(prev + stepSize * i);
-                final double[] msI = interpolator.getInterpolatedDerivatives().clone();
+                final double[] msI = new double[interpolator.getInterpolatedDerivatives().length]; 
+                //interpolator.getInterpolatedDerivatives().clone();
+                System.arraycopy(interpolator.getInterpolatedDerivatives(), 0, msI, 0, interpolator.getInterpolatedDerivatives().length);
                 for (int j = 0; j < n; ++j) {
                     msI[j] *= stepSize;
                 }

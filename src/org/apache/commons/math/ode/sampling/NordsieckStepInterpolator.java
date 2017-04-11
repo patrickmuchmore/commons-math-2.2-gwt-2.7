@@ -83,13 +83,15 @@ public class NordsieckStepInterpolator extends AbstractStepInterpolator {
         scalingH      = interpolator.scalingH;
         referenceTime = interpolator.referenceTime;
         if (interpolator.scaled != null) {
-            scaled = interpolator.scaled.clone();
+            scaled = new double[interpolator.scaled.length]; //interpolator.scaled.clone();
+            System.arraycopy(interpolator.scaled, 0, scaled, 0, interpolator.scaled.length);
         }
         if (interpolator.nordsieck != null) {
             nordsieck = new Array2DRowRealMatrix(interpolator.nordsieck.getDataRef(), true);
         }
         if (interpolator.stateVariation != null) {
-            stateVariation = interpolator.stateVariation.clone();
+            stateVariation = new double[interpolator.stateVariation.length]; //interpolator.stateVariation.clone();
+            System.arraycopy(interpolator.stateVariation, 0, stateVariation, 0, interpolator.stateVariation.length);
         }
     }
 

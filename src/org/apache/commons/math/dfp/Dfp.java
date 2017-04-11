@@ -316,7 +316,8 @@ public class Dfp implements FieldElement<Dfp> {
      * @param d instance to copy
      */
     public Dfp(final Dfp d) {
-        mant  = d.mant.clone();
+        mant  = new int[d.mant.length]; //d.mant.clone();
+        System.arraycopy(d.mant, 0, mant, 0, d.mant.length);
         sign  = d.sign;
         exp   = d.exp;
         nans  = d.nans;
